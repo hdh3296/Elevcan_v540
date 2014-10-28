@@ -1,0 +1,8 @@
+Error[000] C:\micom\project\elevcan\cpu_18f4480\slave_4480\Digit_Out\digit_out.c 717 : undefined identifier: BCD1_LAMP
+Error[000] C:\micom\project\elevcan\cpu_18f4480\slave_4480\Digit_Out\digit_out.c 718 : undefined identifier: BCD2_LAMP
+Error[000] C:\micom\project\elevcan\cpu_18f4480\slave_4480\Digit_Out\digit_out.c 719 : undefined identifier: BCD3_LAMP
+Error[000] C:\micom\project\elevcan\cpu_18f4480\slave_4480\Digit_Out\digit_out.c 720 : undefined identifier: BCD4_LAMP
+Error[000] C:\micom\project\elevcan\cpu_18f4480\slave_4480\Digit_Out\digit_out.c 723 : undefined identifier: DOOR_OPEN_LAMP
+Error[000] C:\micom\project\elevcan\cpu_18f4480\slave_4480\Digit_Out\digit_out.c 724 : undefined identifier: PARKING_LAMP
+Error[000] C:\micom\project\elevcan\cpu_18f4480\slave_4480\Digit_Out\digit_out.c 727 : undefined identifier: EMG_LAMP_B
+Error[000] C:\micom\project\elevcan\cpu_18f4480\slave_4480\Digit_Out\digit_out.c 728 : undefined identifier: EMG_LAMP

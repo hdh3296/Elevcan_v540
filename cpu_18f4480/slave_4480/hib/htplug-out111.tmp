@@ -1,0 +1,5 @@
+HI-TECH C PRO for the PIC18 MCU Family  V9.66
+Copyright (C) 1984-2011 HI-TECH SOFTWARE
+Serial number: HCPIC18P-336077818
+Advisory[1233] Employing 18F4480 errata work-arounds:
+Advisory[1234]  * Corrupted fast interrupt shadow registers
