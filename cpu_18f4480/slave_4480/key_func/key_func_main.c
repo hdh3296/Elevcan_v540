@@ -219,7 +219,8 @@ void XDoorOpenCheck(unsigned char adr_local)
 
 	if(RcvBuf[xIdPt + SL_mCrtExtMoveFlr] & 0x80){
 		X_button=	RcvBuf[xIdPt + SL_mCrtExtMoveFlr];		
-		X_button=	(X_button & 0x1f);				
+//		X_button=	(X_button & 0x1f);				
+		X_button=	(X_button & 0x3f);				
 
 		bitval=0x01;	
 		i=((X_button-1) / 8);	
@@ -234,7 +235,8 @@ void XDoorOpenCheck(unsigned char adr_local)
 
 	if(RcvBuf[xIdPt + SL_mCrtExtMoveFlr] & 0x40){
 		X_button=	RcvBuf[xIdPt + SL_mCrtExtMoveFlr];		
-		X_button=	(X_button & 0x1f);				
+////		X_button=	(X_button & 0x1f);				
+		X_button=	(X_button & 0x3f);				
 
 		bitval=0x01;	
 		i=(( X_button-1) / 8);	
@@ -672,6 +674,7 @@ CommonKeyLoad();
 	            else if(Tx0ConfirmCnt==0)   Dn_Key_Clear=0;
 			}
 
+/*
             if(HostCallMe){
         		SelHostAdr=LocalNumber;                  
                 CanCmd=CAN_NO_KEY_SET;
@@ -679,7 +682,9 @@ CommonKeyLoad();
 				HostCallMe=0;              
                 CanTx0();
             }
-//			CanTxAct=0;
+			CanTxAct=0;
+*/
+
         }            
     }
 }
@@ -699,6 +704,8 @@ void interrupt isr(void)
         TMR0H=MSEC_H;    
 
         shiftTime++;
+        CanTime++;
+
 /*        
         if(!UP_KEY){
             UpKeyBit=1;   

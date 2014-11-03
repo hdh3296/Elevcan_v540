@@ -33,7 +33,7 @@
     __CONFIG(7, 0x400f);                                              
 */
 
-#define	 MY_COMPANY		'A'
+#define	 MY_COMPANY		'0'
 
 
 #define	 KeyPORT	PORTB
