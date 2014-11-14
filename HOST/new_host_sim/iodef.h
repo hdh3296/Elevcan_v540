@@ -23,7 +23,6 @@ extern void __attribute__((section(".usercode"))) HextoASCIIByte(void);
 
 #define	RS485_FOR_CRT	1
 
-//#define		CHEAP			1
 
 //#define		CHINA			1
 
@@ -34,6 +33,9 @@ extern void __attribute__((section(".usercode"))) HextoASCIIByte(void);
 //#define		TEMP_PARK			1
 
 //#define		TEMP_GUEN			1
+
+
+//#define	SAMSUNG_FIRE	1
 
 ////////////////////////////////////////////
 ////////////////////////////////////////////
@@ -1020,33 +1022,6 @@ extern	UserDataType    NotRecoveryData;
 extern	UserDataType    CmdFixFlrTime;
 
 
-#ifdef	CHEAP
-extern	UserDataType    FlrCounter;   
-extern	UserDataType    FlrCounterRst;   
-
-extern  UserDataType    TmpBitRG;   
-extern  UserDataType    TmpBitFR1;   
-extern	UserDataType    TmpBitX0;   
-extern	UserDataType    TmpBitFS0;   
-
-
-extern	UserDataType    TmpUpButton0;   
-extern	UserDataType    TmpUpButton8;   
-extern	UserDataType    TmpUpButton16;   
-extern	UserDataType    TmpUpButton24;
-   
-extern	UserDataType    TmpDnButton0;   
-extern	UserDataType    TmpDnButton8;   
-extern	UserDataType    TmpDnButton16;   
-extern	UserDataType    TmpDnButton24;   
-
-extern	UserDataType    TmpCarOpCL;   
-extern	UserDataType    TmpCarButton0;   
-extern	UserDataType    TmpCarButton8;   
-extern	UserDataType    TmpCarButton16;   
-extern	UserDataType    TmpCarButton24;   
-
-#endif
 
 
 extern unsigned long  parameter_mirror[MAX_LONG_BUF]; // __attribute__((aligned(MAX_LONG_BUF),far,section(".ram,r")));
@@ -1288,11 +1263,12 @@ extern const unsigned int EncRate[];
 #define  bSlavePrk      		GET_BITFIELD(&StateBit5).bit0 
 #define  bMotor_Overheat      	GET_BITFIELD(&StateBit5).bit1 
 #define  bBefbMotor_Overheat    GET_BITFIELD(&StateBit5).bit2 
-#define  bNcTmp3        		GET_BITFIELD(&StateBit5).bit3 
-#define  bNcTmp4         		GET_BITFIELD(&StateBit5).bit4 
+#define  bFlrMatchChk        	GET_BITFIELD(&StateBit5).bit3 
+#define  bBef_IN_MM         	GET_BITFIELD(&StateBit5).bit4 
 #define  bSafety_scrSft       	GET_BITFIELD(&StateBit5).bit5 
 #define  bRelevelErr		    GET_BITFIELD(&StateBit5).bit6 
 #define  bLevelOpen        		GET_BITFIELD(&StateBit5).bit7 
+
 
 
 //////////////////////////////////////////////////////////////

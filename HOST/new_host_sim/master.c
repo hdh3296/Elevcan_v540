@@ -176,6 +176,8 @@ unsigned	int    	    ExIOTimer=0;
 
 
 unsigned	int    	    BreakTime=0;
+unsigned	int    	    HuntingTimer=0;
+unsigned	int    	    HuntingCnter=0;
 
 
 //unsigned	int    	    zz=0;
@@ -348,37 +350,6 @@ UserDataType    ExtKeyCnt=0;
 
 UserDataType    CmdFixFlrTime=0;
 
-
-
-#ifdef	CHEAP
-UserDataType    FlrCounter;   
-UserDataType    FlrCounterRst;   
-
-UserDataType    TmpBitRG;   
-UserDataType    TmpBitFR1;   
-UserDataType    TmpBitX0;   
-UserDataType    TmpBitFS0;   
-
-UserDataType    TmpUpButton0;   
-UserDataType    TmpUpButton8;   
-UserDataType    TmpUpButton16;   
-UserDataType    TmpUpButton24;
-   
-UserDataType    TmpDnButton0;   
-UserDataType    TmpDnButton8;   
-UserDataType    TmpDnButton16;   
-UserDataType    TmpDnButton24;   
-
-UserDataType    TmpCarOpCL;   
-UserDataType    TmpCarButton0;   
-UserDataType    TmpCarButton8;   
-UserDataType    TmpCarButton16;   
-UserDataType    TmpCarButton24;   
-
-
-UserDataType    BefTmpCarButton0;   
-
-#endif
 
 unsigned long 	BefCurEncoderPulse=0;
 unsigned long   TmpEncoderPulse=0;
@@ -3453,6 +3424,8 @@ void   __attribute__((section(".usercode"))) CarAllStopCmdTest(void)
 		UpDnStopCmd();           
         OUT_ERR(1);        
 
+
+
         bDoorOpenCmd=0;
         bDoorCloseCmd=0;
 
@@ -3467,6 +3440,7 @@ void   __attribute__((section(".usercode"))) CarAllStopCmdTest(void)
         
     if(bInvOutAllClr){        
 		bManualStop=0;
+		sRamDArry[mDoor]    = (sRamDArry[mDoor] & CLEAR_ALL_DOOR_KEY);   
 
 		UpDnStopCmd();
 
@@ -5342,6 +5316,7 @@ void __attribute__((section(".usercode")))  AutoManualCheck(void)
 }
 
  
+/*
 unsigned int    __attribute__((section(".usercode"))) Speed210Check(void)
 {
     unsigned long MinPulse;
@@ -5354,6 +5329,7 @@ unsigned int    __attribute__((section(".usercode"))) Speed210Check(void)
     if(TotalPulse>MinPulse) return(0);
     else                    return(1);
 }
+*/
 
 
 unsigned int    __attribute__((section(".usercode"))) Speed180Check(void)
@@ -5995,6 +5971,9 @@ NoStart=0;
     
                 break;     
             case    SPEED_210:
+
+/*
+
                 if(!Speed210Check()){
                     CurSpeed=SPEED_210;
                     DecreasePulse=GET_LONG(DEC_PULSE_210);
@@ -6027,6 +6006,8 @@ NoStart=0;
                 }
 
                 if((cF_SPEED60 == 0) && (cF_SPEED90 == 0) && (cF_SPEED120 == 0) && (cF_SPEED150 == 0)  && (cF_SPEED180 == 0)   && (cF_SPEED210 == 0))	ret=2;
+*/
+
 
                 ret=3;      //// not use
                 break;     
@@ -7101,56 +7082,137 @@ unsigned int	__attribute__((section(".usercode")))  OutDateCheck(void)
 #endif
 
 	return(0);
-
-
-/*
-
-    if(SafetyChk()){
-        i=0;        
-        if(sRamDArry[mSysStatus] > sSFT)   sRamDArry[mSysStatus]=sSFT;      
-    }
-
-	if(bManualUpKey){
-		if(!bDoorCloseOk){         
-            if(i==1)                    SelectDoorClose_you();
-            else if(!IN_LU || !IN_LD)   SelectDoorOpen_you();
-		}  
-        else if(!bManualStop){                         
-    		CarUpStartCmd();    
-    		if(!bMoveUpOk){
-    			bCarErr=1;
-    		}      
-        }
-        else{
-            bCarErr=1;
-        }                         
-	}          
-   	else if(bManualDnKey){
-		if(!bDoorCloseOk){
-            if(i==1)                    SelectDoorClose_you();        
-            else if(!IN_LU || !IN_LD)   SelectDoorOpen_you();
-        }
-        else if(!bManualStop){                         
-            CarDnStartCmd();
-            if(!bMoveDnOk){                  
-                bCarErr=1;
-            } 
-        }
-        else{
-            bCarErr=1;
-        }                         
-    }
-    else{
-        bCarStop=1;
-    }
-*/    
 }            
+
+
 
 
 unsigned int __attribute__((section(".usercode")))  CheckFloorSensor(void)
 {
+	LocalType FloorPort;
 
-#ifndef	CHEAP
+	bFlrMatchChk=0;
+
+#ifdef	TEST_SIMULATION
+	bFlrMatchChk=0;
+	return(0);
+#else
+
+
+    if(((USE_CHECK == BAGGAGE_USE) ||  (USE_CHECK == CARLIFT_USE))){ 
+
+		if((sRamDArry[mcurfloor] == 0) && IN_SD1){
+			bFlrMatchChk=1;
+		}
+
+		if((sRamDArry[mcurfloor] == cF_TOPFLR) && IN_SU1){
+			bFlrMatchChk=1;
+		}
+
+        if(!IN_SD1 || !IN_SU1){
+	        if(!IN_X0 || !IN_X1 || !IN_X2 || !IN_X3 || !IN_X4 || !IN_X5 || !IN_X6){ 
+				bFlrMatchChk=1;
+	        }
+
+        	if(!IN_SD1 && !IN_SU1){           
+				bFlrMatchChk=1;
+			}          
+			return(0);
+		}
+
+		if(!FloorSelMethod){
+	        switch(sRamDArry[mcurfloor]){
+	            case    1:    
+	                if(IN_X0 || !IN_X1 || !IN_X2 || !IN_X3 || !IN_X4 || !IN_X5 || !IN_X6){ 
+						bFlrMatchChk=1;
+	                }                    
+	                break;
+	            case    2:
+	                if(IN_X1 || !IN_X0 || !IN_X2 || !IN_X3 || !IN_X4 || !IN_X5 || !IN_X6){ 
+						bFlrMatchChk=1;
+	                }                    
+	                break;
+	            case    3:
+	                if(IN_X2 || !IN_X0 || !IN_X1 || !IN_X3 || !IN_X4 || !IN_X5 || !IN_X6){ 
+						bFlrMatchChk=1;
+	                }                    
+	                break;
+	            case    4:
+	                if(IN_X3 || !IN_X0 || !IN_X1 || !IN_X2 || !IN_X4 || !IN_X5 || !IN_X6){
+						bFlrMatchChk=1;
+	                }                    
+	                break;
+	            case    5:
+	                if(IN_X4 || !IN_X0 || !IN_X1 || !IN_X2 || !IN_X3 || !IN_X5 || !IN_X6){ 
+						bFlrMatchChk=1;
+	                }                    
+	                break;
+	            case    6:
+	                if(IN_X5 || !IN_X0 || !IN_X1 || !IN_X2 || !IN_X3 || !IN_X4 || !IN_X6){ 
+						bFlrMatchChk=1;
+	                }                    
+	                break;
+	            case    7:
+	                if((IN_X6 || IN_X0) || !IN_X1 || !IN_X2 || !IN_X3 || !IN_X4 || !IN_X5){ 
+						bFlrMatchChk=1;
+	                }                    
+	                break;
+	            case    8:
+	                if((IN_X6 || IN_X1) || !IN_X0 || !IN_X2 || !IN_X3 || !IN_X4 || !IN_X5){ 
+						bFlrMatchChk=1;
+	                }                    
+	                break;
+	            case    9:
+	                if((IN_X6 || IN_X2) || !IN_X0 || !IN_X1 || !IN_X3 || !IN_X4 || !IN_X5){ 
+						bFlrMatchChk=1;
+	                }                    
+	                break;
+	            case    10:
+	                if((IN_X6 || IN_X3) || !IN_X0 || !IN_X1 || !IN_X2 || !IN_X4 || !IN_X5){ 
+						bFlrMatchChk=1;
+	                }                    
+	                break;
+	            case    11:
+	                if((IN_X6 || IN_X4) || !IN_X0 || !IN_X1 || !IN_X2 || !IN_X3 || !IN_X5){ 
+						bFlrMatchChk=1;
+	                }                    
+	                break;
+	            case    12:
+	                if((IN_X6 || IN_X5) || !IN_X0 || !IN_X1 || !IN_X2 || !IN_X3 || !IN_X4){ 
+						bFlrMatchChk=1;
+	                }                    
+	                break;
+	
+	            default:
+						bFlrMatchChk=1;
+	                break;        
+	        }    
+		}
+		else{
+			FloorPort=0;
+			if( !IN_X0)	FloorPort=(FloorPort | 0x01);
+			if( !IN_X1)	FloorPort=(FloorPort | 0x02);
+			if( !IN_X2)	FloorPort=(FloorPort | 0x04);
+			if( !IN_X3)	FloorPort=(FloorPort | 0x08);
+			if( !IN_X4)	FloorPort=(FloorPort | 0x10);
+			if( !IN_X5)	FloorPort=(FloorPort | 0x20);
+	
+	        if(sRamDArry[mcurfloor] != FloorPort){
+					bFlrMatchChk=1;
+			}
+		}			
+    }
+
+#endif
+	return(0);
+}
+
+
+
+/*
+unsigned int __attribute__((section(".usercode")))  CheckFloorSensor(void)
+{
+
 
 #ifdef	TEST_SIMULATION
     bEqualFloorError=0;
@@ -7166,6 +7228,7 @@ unsigned int __attribute__((section(".usercode")))  CheckFloorSensor(void)
 		if((sRamDArry[mcurfloor] == 0) && IN_SD1){
             bCarErr=1;
             bEqualFloorError=1;
+
 		}
 
 		if((sRamDArry[mcurfloor] == cF_TOPFLR) && IN_SU1){
@@ -7284,11 +7347,10 @@ unsigned int __attribute__((section(".usercode")))  CheckFloorSensor(void)
     }
 
 #endif
-#endif
 
 	return(0);
 }
-
+*/
 
 //////
 
@@ -7413,7 +7475,14 @@ void __attribute__((section(".usercode")))  DoorOpenCloseSeq(void)
     } 
 
     if((sRamDArry[mDoorSeq] >= DOOR_OPEN_START) && (sRamDArry[mDoorSeq] < READY_ELEVATOR)){
-    	CheckFloorSensor();
+  //  	CheckFloorSensor();
+		if(bFlrMatchChk){
+            bCarErr=1;
+            bEqualFloorError=1;
+		}
+		else{
+            bEqualFloorError=0;
+		}
     }
 
 
@@ -7443,8 +7512,6 @@ void __attribute__((section(".usercode")))  DoorOpenCloseSeq(void)
 //            OneDoorSelOpenKeyCheck();
 
             sRamDArry[mDoor]= (sRamDArry[mDoor] & MAIN_SUB_CLOSE_KEY_CLEAR);
-
-//            CheckFloorSensor();
             
 	        sRamDArry[mDoor] =(sRamDArry[mDoor] & ~UPDN_CAR_READY);
 
@@ -8954,102 +9021,6 @@ void __attribute__((section(".usercode")))  InPutRead(void)
         IN_INV_PORT =1;
     }
 
-
-/*
-///////////////
-#ifdef	CHEAP
-    if(BEF_IN_X0_IN == IN_X0_IN){
-        if(X0Time>100){
-            IN_X0_PORT=BEF_IN_X0_IN;
-            X0Time=0;
-        }
-    }
-    else{
-        BEF_IN_X0_IN=IN_X0_IN;
-        X0Time=0;
-    }    
-
-
-    if(BEF_IN_X1_IN == IN_X1_IN){
-        if(X1Time>100){
-            IN_X1_PORT=BEF_IN_X1_IN;
-            X1Time=0;
-        }
-    }
-    else{
-        BEF_IN_X1_IN=IN_X1_IN;
-        X1Time=0;
-    }    
-
-
-    if(BEF_IN_X2_IN == IN_X2_IN){
-        if(X2Time>100){
-            IN_X2_PORT=BEF_IN_X2_IN;
-            X2Time=0;
-        }
-    }
-    else{
-        BEF_IN_X2_IN=IN_X2_IN;
-        X2Time=0;
-    }    
-    if(BEF_IN_X3_IN == IN_X3_IN){
-        if(X3Time>100){
-            IN_X3_PORT=BEF_IN_X3_IN;
-            X3Time=0;
-        }
-    }
-    else{
-        BEF_IN_X3_IN=IN_X3_IN;
-        X3Time=0;
-    }    
-
-
-    if(BEF_IN_X4_IN == IN_X4_IN){
-        if(X4Time>100){
-            IN_X4_PORT=BEF_IN_X4_IN;
-            X4Time=0;
-        }
-    }
-    else{
-        BEF_IN_X4_IN=IN_X4_IN;
-        X4Time=0;
-    }    
-
-    if(BEF_IN_X5_IN == IN_X5_IN){
-        if(X5Time>100){
-            IN_X5_PORT=BEF_IN_X5_IN;
-            X5Time=0;
-        }
-    }
-    else{
-        BEF_IN_X5_IN=IN_X5_IN;
-        X5Time=0;
-    }    
-
-    if(BEF_IN_X6_IN == IN_X6_IN){
-        if(X6Time>100){
-            IN_X6_PORT=BEF_IN_X6_IN;
-            X6Time=0;
-        }
-    }
-    else{
-        BEF_IN_X6_IN=IN_X6_IN;
-        X6Time=0;
-    }    
-
-    if(BEF_IN_X7_IN == IN_X7_IN){
-        if(X7Time>100){
-            IN_X7_PORT=BEF_IN_X7_IN;
-            X7Time=0;
-        }
-    }
-    else{
-        BEF_IN_X7_IN=IN_X7_IN;
-        X7Time=0;
-    }    
-#else
-
-*/
     if(BEF_IN_X0_IN == IN_X0_IN){
         if(X0Time>10){
             IN_X0_PORT=BEF_IN_X0_IN;
@@ -9139,7 +9110,6 @@ void __attribute__((section(".usercode")))  InPutRead(void)
         X7Time=0;
     }    
 
-///#endif
 
 
 	if(ExIOTimer > 30)	sRamDArry[mExtIN0]= 0xff;
@@ -9285,7 +9255,11 @@ void  __attribute__((section(".usercode")))   VoiceStart(void)
 				bSolControl=0;
 			}
 			else if(sRamDArry[mDoorSeq] < DOOR_CLOSE_START){
+#ifdef	TEMP_PARK
+				if( (!IN_GS2) && tmpDoorChk()){
+#else
 				if(!IN_GS2){   		// decrease
+#endif
 					if( !bSolControl){
 						bSolControl=1;
 						SolTimer=0;
@@ -9308,7 +9282,6 @@ void  __attribute__((section(".usercode")))   VoiceStart(void)
 			else{
 				OUT_BELL(0);
 				bSolControl=0;
-//				SolTimer=100;
 				SolTimer=0;
 			}
 		}
@@ -9384,7 +9357,6 @@ void  __attribute__((section(".usercode"))) 	ServiceCheck(void)
 
 void    __attribute__((section(".usercode"))) WaterCheck(void)
 {
-#ifndef	CHEAP
 
     LocalType watersafefloor;
     
@@ -9423,7 +9395,6 @@ void    __attribute__((section(".usercode"))) WaterCheck(void)
     else{
         bWaterSen=0;
     }
-#endif
 }
 
 
@@ -9595,6 +9566,7 @@ unsigned int  __attribute__((section(".usercode")))  BreakMgtOpenCheck(void)
 		return(0);
 	#else
 
+    	if(INVERTER_CHECK == D_F)		return(0);                                             
 
 		rdy=CheckStartBreakMgt();
 		if(rdy == 0){
@@ -9679,6 +9651,35 @@ unsigned int    __attribute__((section(".usercode")))  BreakOpenCheck(void)
 
 
 
+unsigned int  __attribute__((section(".usercode")))   HuntingChk(void)
+{
+
+    if(INVERTER_CHECK != D_F){
+		HuntingCnter=0;
+		return(0);
+	}                                          
+    if(!bAuto){
+		HuntingCnter=0;
+		return(0);
+	}
+
+
+	if(bBef_IN_MM == IN_MM){
+		if(	HuntingTimer > 50){
+			HuntingCnter=0;
+		}
+	}
+	else{
+		if(HuntingCnter > 10){
+	        bsBreakMgtOpen=1;
+			bCarStopNoRun=1;
+		}	
+		HuntingTimer=0;
+		HuntingCnter++;
+		bBef_IN_MM = IN_MM;
+	}
+	return(0);
+}
 
 
 
@@ -9924,489 +9925,6 @@ unsigned int	__attribute__((section(".usercode"))) UpDnSim(void)
 
 
 
-#ifdef	CHEAP
-
-
-unsigned int  __attribute__((section(".usercode")))   ButtonCheck(void)
-{
-	UserDataType tmpbutton;
-	UserDataType i,j,k,l,m,n;
-	UserDataType tmp_topflr,tmp_curflr,tmp_newflr;
-
-
-	l=0;
-	m=0;
-	n=0;
-
-	tmp_newflr=	0;
-	tmp_topflr=(UserDataType)(cF_TOPFLR);
-	tmp_curflr=(UserDataType)(sRamDArry[mcurfloor]);
-
-
-
-
-	if(!IN_GR_CHEAP)	TmpUpButton0=(TmpUpButton0 | 0x01);   
-	if(!IN_BAT_CHEAP)	TmpUpButton0=(TmpUpButton0 | 0x02);   
-	if(!IN_PASS_CHEAP)	TmpUpButton0=(TmpUpButton0 | 0x04);   
-	if(!IN_FIRE_CHEAP)	TmpUpButton0=(TmpUpButton0 | 0x08);   
-	if(!IN_WATER_CHEAP)	TmpUpButton0=(TmpUpButton0 | 0x10);   
-	if(!IN_FULL_CHEAP)	TmpUpButton0=(TmpUpButton0 | 0x20);   
-	if(!IN_MM_CHEAP)	TmpUpButton0=(TmpUpButton0 | 0x40);   
-//	if(!IN_FHM_CHEAP)	TmpUpButton0=(TmpUpButton0 | 0x80);   
-
-
-//	if(!IN_FR1_CHEAP)	TmpDnButton0=(TmpDnButton0 | 0x01);
-	if(!IN_FR2_CHEAP)	TmpDnButton0=(TmpDnButton0 | 0x02);
-	if(!IN_GS2_CHEAP)	TmpDnButton0=(TmpDnButton0 | 0x04);
-	if(!IN_DS2_CHEAP)	TmpDnButton0=(TmpDnButton0 | 0x08);
-	if(!IN_SU2_CHEAP)	TmpDnButton0=(TmpDnButton0 | 0x10);
-	if(!IN_SD2_CHEAP)	TmpDnButton0=(TmpDnButton0 | 0x20);
-	if(!IN_BM_CHEAP)	TmpDnButton0=(TmpDnButton0 | 0x40);
-	if(!IN_INV_CHEAP)	TmpDnButton0=(TmpDnButton0 | 0x80);
-
-
-	if(!IN_X0_CHEAP){
-		if(!(BefTmpCarButton0 & 0x01)){		
-			if(TmpCarButton0 & 0x01)		TmpCarButton0=(TmpCarButton0 & 0xfe);
-			else							TmpCarButton0=(TmpCarButton0 | 0x01);
-	
-			BefTmpCarButton0=(BefTmpCarButton0 | 0x01);
-		}	
-	}
-	else	BefTmpCarButton0=(BefTmpCarButton0 & 0xfe);	
-
-
-	if(!IN_X1_CHEAP){
-		if(!(BefTmpCarButton0 & 0x02)){		
-			if(TmpCarButton0 & 0x02)		TmpCarButton0=(TmpCarButton0 & 0xfd);
-			else							TmpCarButton0=(TmpCarButton0 | 0x02);
-
-			BefTmpCarButton0=(BefTmpCarButton0 | 0x02);
-		}
-	}
-	else	BefTmpCarButton0=(BefTmpCarButton0 & 0xfd);	
-
-	if(!IN_X2_CHEAP){
-		if(!(BefTmpCarButton0 & 0x04)){		
-			if(TmpCarButton0 & 0x04)	TmpCarButton0=(TmpCarButton0 & 0xfb);
-			else						TmpCarButton0=(TmpCarButton0 | 0x04);
-			BefTmpCarButton0=(BefTmpCarButton0 | 0x04);
-		}
-	}
-	else	BefTmpCarButton0=(BefTmpCarButton0 & 0xfb);	
-
-	if(!IN_X3_CHEAP){
-		if(!(BefTmpCarButton0 & 0x08)){		
-			if(TmpCarButton0 & 0x08)	TmpCarButton0=(TmpCarButton0 & 0xf7);
-			else						TmpCarButton0=(TmpCarButton0 | 0x08);
-			BefTmpCarButton0=(BefTmpCarButton0 | 0x08);
-		}
-	}
-	else	BefTmpCarButton0=(BefTmpCarButton0 & 0xf7);	
-
-
-	if(!IN_X4_CHEAP){
-		if(!(BefTmpCarButton0 & 0x10)){		
-			if(TmpCarButton0 & 0x10)	TmpCarButton0=(TmpCarButton0 & 0xef);
-			else						TmpCarButton0=(TmpCarButton0 | 0x10);
-			BefTmpCarButton0=(BefTmpCarButton0 | 0x10);
-		}
-	}
-	else	BefTmpCarButton0=(BefTmpCarButton0 & 0xef);	
-
-
-	if(!IN_X5_CHEAP){
-		if(!(BefTmpCarButton0 & 0x20)){		
-			if(TmpCarButton0 & 0x20)	TmpCarButton0=(TmpCarButton0 & 0xdf);
-			else						TmpCarButton0=(TmpCarButton0 | 0x20);
-			BefTmpCarButton0=(BefTmpCarButton0 | 0x20);
-		}
-	}
-	else	BefTmpCarButton0=(BefTmpCarButton0 & 0xdf);	
-
-
-	if(!IN_X6_CHEAP){
-		if(!(BefTmpCarButton0 & 0x40)){		
-			if(TmpCarButton0 & 0x40)	TmpCarButton0=(TmpCarButton0 & 0xbf);
-			else						TmpCarButton0=(TmpCarButton0 | 0x40);
-			BefTmpCarButton0=(BefTmpCarButton0 | 0x40);
-		}
-	}
-	else	BefTmpCarButton0=(BefTmpCarButton0 & 0xbf);	
-
-
-	if(!IN_X7_CHEAP){
-		if(!(BefTmpCarButton0 & 0x80)){		
-			if(TmpCarButton0 & 0x80)	TmpCarButton0=(TmpCarButton0 & 0xef);
-			else						TmpCarButton0=(TmpCarButton0 | 0x80);
-			BefTmpCarButton0=(BefTmpCarButton0 | 0x80);
-		}
-	}
-	else	BefTmpCarButton0=(BefTmpCarButton0 & 0xef);	
-
-
-	TmpCarOpCL=0;
-	if(!IN_FHM_CHEAP)	TmpCarOpCL=(TmpCarOpCL | 0x01);   	//open
-	if(!IN_FR1_CHEAP)	TmpCarOpCL=(TmpCarOpCL | 0x02);		//close
-
-
-	TmpUpButton0	=((unsigned char)(TmpUpButton0  & sRamDArry[FLR_ON_OFF0])); 
-	TmpUpButton8	=((unsigned char)(TmpUpButton8  & sRamDArry[FLR_ON_OFF1])); 
-	TmpUpButton16	=((unsigned char)(TmpUpButton16 & sRamDArry[FLR_ON_OFF2])); 
-	TmpUpButton24	=((unsigned char)(TmpUpButton24 & sRamDArry[FLR_ON_OFF3])); 
-
-	TmpDnButton0	=((unsigned char)(TmpDnButton0  & sRamDArry[FLR_ON_OFF0])); 
-	TmpDnButton8	=((unsigned char)(TmpDnButton8  & sRamDArry[FLR_ON_OFF1])); 
-	TmpDnButton16	=((unsigned char)(TmpDnButton16 & sRamDArry[FLR_ON_OFF2])); 
-	TmpDnButton24	=((unsigned char)(TmpDnButton24 & sRamDArry[FLR_ON_OFF3])); 
-	
-	TmpCarButton0	=((unsigned char)(TmpCarButton0  & sRamDArry[FLR_ON_OFF0])); 
-	TmpCarButton8	=((unsigned char)(TmpCarButton8  & sRamDArry[FLR_ON_OFF1])); 
-	TmpCarButton16	=((unsigned char)(TmpCarButton16 & sRamDArry[FLR_ON_OFF2])); 
-	TmpCarButton24	=((unsigned char)(TmpCarButton24 & sRamDArry[FLR_ON_OFF3])); 
-
-	switch(tmp_topflr){
-		case	0:
-		case	1:
-			TmpUpButton0	=0; 
-			TmpDnButton0	=0; 
-			TmpCarButton0	=0; 
-			break;
-		case	2:
-			TmpUpButton0	=(unsigned char)(TmpUpButton0  & 0x7); 
-			TmpDnButton0	=(unsigned char)(TmpDnButton0  & 0x7); 
-			TmpCarButton0	=(unsigned char)(TmpCarButton0 & 0x7); 
-			break;
-		case	3:
-			TmpUpButton0	=(unsigned char)(TmpUpButton0  & 0xf); 
-			TmpDnButton0	=(unsigned char)(TmpDnButton0  & 0xf); 
-			TmpCarButton0	=(unsigned char)(TmpCarButton0 & 0xf); 
-			break;
-		case	4:
-			TmpUpButton0	=(unsigned char)(TmpUpButton0  & 0x1f); 
-			TmpDnButton0	=(unsigned char)(TmpDnButton0  & 0x1f); 
-			TmpCarButton0	=(unsigned char)(TmpCarButton0 & 0x1f); 
-			break;
-		case	5:
-			TmpUpButton0	=(unsigned char)(TmpUpButton0  & 0x2f); 
-			TmpDnButton0	=(unsigned char)(TmpDnButton0  & 0x2f); 
-			TmpCarButton0	=(unsigned char)(TmpCarButton0 & 0x2f); 
-			break;
-		case	6:
-			TmpUpButton0	=(unsigned char)(TmpUpButton0  & 0x4f); 
-			TmpDnButton0	=(unsigned char)(TmpDnButton0  & 0x4f); 
-			TmpCarButton0	=(unsigned char)(TmpCarButton0 & 0x4f); 
-			break;
-	}
-
-   	if(bExtButClr || S2_EXT_BUT_CLR1){
-		TmpUpButton0=0;   
-		TmpUpButton8=0;   
-		TmpUpButton16=0;   
-		TmpUpButton24=0;   
-
-		TmpDnButton0=0;   
-		TmpDnButton8=0;   
-		TmpDnButton16=0;   
-		TmpDnButton24=0;   
-   	}
-
-   	if(bCarButClr || S2_CAR_BUT_CLR1){
-		TmpCarButton0=0;   
-		TmpCarButton8=0;   
-		TmpCarButton16=0;   
-		TmpCarButton24=0;   
-	}
-
-
-	if(TmpCarOpCL & 0x02)	sRamDArry[mDoor]=(sRamDArry[mDoor] & 0x02);
-	if(TmpCarOpCL & 0x01){
-		sRamDArry[mDoor]=(sRamDArry[mDoor] & 0xfc);
-		sRamDArry[mDoor]=(sRamDArry[mDoor] | 0x01);
-	}
-
-
-
-
-	if(bUpWard){
-		if(S1_OPEN1){
-			i=0x01;
-			i=(i << tmp_curflr);
-			TmpUpButton0=(TmpUpButton0 & ~(i));
-			TmpCarButton0=(TmpCarButton0 &  ~(i));   
-		}
-
-		tmpbutton=TmpUpButton0;
-		if(tmpbutton){
-			i=0x01;
-			for(k=0;k<tmp_topflr;k++){
-				if(i & tmpbutton){
-					if(k == tmp_curflr){
-						sRamDArry[mEqualFloor]=(unsigned char)(k | UP_READY);
-					}
-					else if(k > tmp_curflr){
-						l=(k | UP_READY);
-						tmp_newflr=	l;
-						k=tmp_topflr;	
-					}
-				}
-				i=(i << 1); 
-			}
-		} 
-
-		tmpbutton=TmpCarButton0;
-		if(tmpbutton){
-			i=0x01;
-			for(k=0;k<=tmp_topflr;k++){
-				if(i & tmpbutton){
-					if(k == tmp_curflr){
-						sRamDArry[mEqualFloor]=(k | CAR_READY);
-					}
-
-					if(k > tmp_curflr){
-						m=(k | CAR_READY);
-						if((m & 0x1f) == (l & 0x1f)){
-							tmp_newflr=	(m | l);
-						} 
-						else if((m & 0x1f) > (l & 0x1f)){
-							if(l>0)	tmp_newflr=	l;
-							else	tmp_newflr=	m;
-						} 
-						else{
-							tmp_newflr=	m;
-						} 
-						k=tmp_topflr;	
-					}
-				}
-				i=(i << 1); 
-			}
-		}
-
-
-		if((l | m)==0){
-			tmpbutton=TmpDnButton0;
-			if(tmpbutton){
-				i=0x01;
-				i=(i << tmp_topflr);
-				for(k=tmp_topflr;k>=1;k--){
-					if( i & tmpbutton){
-						if(k == tmp_curflr){
-							if( !(sRamDArry[mEqualFloor] & UP_READY)){
-								sRamDArry[mEqualFloor]=(unsigned char)(k | DN_READY);
-								return(0); 
-							}
-						}
-						else if(k > tmp_curflr){
-							tmp_newflr=	(k | DN_READY);
-							break;							
-						}
-					} 
-					i=(i >> 1);
-				}
-			} 
-		}
-
-
-		if((unsigned char)tmp_newflr != sRamDArry[mHighFloor]){
-			if(tmp_newflr > 0){
-				if((sRamDArry[mHighFloor]==0) || ((sRamDArry[mHighFloor] & 0x1f) >= ( (unsigned char)(tmp_newflr & 0x1f)) )){  
-					sRamDArry[mHighFloor]=(unsigned char)tmp_newflr;
-				}
-				else if((sRamDArry[mHighFloor] & 0x1f) != ( (unsigned char)(tmp_newflr & 0x1f))){
-					sRamDArry[mHighFloor]=0;				
-				}
-			}
-			else{
-				sRamDArry[mHighFloor]=0;
-			}
-		}
-		sRamDArry[mLowFloor]  = 0;       
-	}    
-
-     				
-   	else if(bDnWard){
-		if(S1_OPEN1){
-			i=0x01;
-			i=(i << tmp_curflr);
-			TmpDnButton0=(TmpDnButton0 & ~(i));
-			TmpCarButton0=(TmpCarButton0 &  ~(i));   
-		}
-
-
-		tmpbutton=TmpDnButton0;
-		if(tmpbutton){
-			i=0x01;
-			i=(i << tmp_topflr);
-	
-			for(k=tmp_topflr;k >= 1;k--){
-				if(i & tmpbutton){
-					if(k == tmp_curflr){
-//						l=(k | DN_READY);
-						sRamDArry[mEqualFloor]=(unsigned char)(k | DN_READY);
-					}
-					else if(k < tmp_curflr){
-						l=(k | DN_READY);
-						tmp_newflr=	l;
-						break;	
-					}
-				}
-				i=(i >> 1); 
-			}
-		} 
-
-		tmpbutton=TmpCarButton0;
-		if(tmpbutton){
-			i=0x01;
-			i=(i << tmp_topflr);
-			for(k=tmp_topflr;k >= 0;k--){
-				if(i & tmpbutton){
-					if(k < tmp_curflr){
-						m=(k | CAR_READY);
-						if((m & 0x1f) == (l & 0x1f)){
-							tmp_newflr=	(m | l);
-						} 
-						else if((m & 0x1f) < (l & 0x1f)){
-							if(l>0)	tmp_newflr=	l;
-							else	tmp_newflr=	m;
-						} 
-						else{
-							tmp_newflr=	m;
-						}
-						break;
-					}
-				}
-				i=(i >> 1); 
-				if(i==0)	break;
-			}
-		}
-
-
-		if((l | m)==0){
-			tmpbutton=TmpUpButton0;
-			if(tmpbutton){
-				i=0x01;
-				for(k=0;k<tmp_topflr;k++){
-					if( i & tmpbutton){
-						if(k == tmp_curflr){
-							if( !(sRamDArry[mEqualFloor] & DN_READY)){
-								sRamDArry[mEqualFloor]=(k | UP_READY);
-								return(0);
-							}
-						}
-						else if(k < tmp_curflr){
-							tmp_newflr=	(k | UP_READY);
-							break;
-						}
-					} 
-					i=(i << 1);
-				}
-			} 
-		}
-
-
-		if((unsigned char)tmp_newflr != sRamDArry[mLowFloor]){
-			if(tmp_newflr > 0){
-				if((sRamDArry[mLowFloor]==0) || ((sRamDArry[mLowFloor] & 0x1f) <= ((unsigned char)(tmp_newflr & 0x1f)))){  
-					sRamDArry[mLowFloor]=(unsigned char)tmp_newflr;
-				}
-				else if((sRamDArry[mLowFloor] & 0x1f) != ( (unsigned char)(tmp_newflr & 0x1f))){
-					sRamDArry[mLowFloor]=0;				
-				}
-			}
-			else{
-				sRamDArry[mLowFloor]=0;
-			}
-
-		}
-
-		sRamDArry[mHighFloor]  = 0;       
-
-	}
-	else{
-		if(S1_OPEN1){
-			i=0x01;
-			i=(i << tmp_curflr);
-			TmpCarButton0=(TmpCarButton0 &  ~(i));   
-		}
-
-
-		tmpbutton=TmpUpButton0;
-		if(tmpbutton){
-			i=0x01;
-			for(k=0;k<tmp_topflr;k++){
-				if( i & tmpbutton){
-					if(k==sRamDArry[mcurfloor]){
-						sRamDArry[mEqualFloor]=(k | UP_READY); 
-						sRamDArry[mDoor]  = (sRamDArry[mDoor] | 0x01);   
-
-						return(0);
-					}
-					else if(k > sRamDArry[mcurfloor]){
-						sRamDArry[mHighFloor]=(k | UP_READY);
-						sRamDArry[mLowFloor]=0; 
-						return(0);
-					}
-					else{
-						sRamDArry[mHighFloor]=0;
-						sRamDArry[mLowFloor]=(k | UP_READY); 
-						return(0);
-					}
-				}
-				i=(i << 1);
-			}
-		}
- 
-		tmpbutton=TmpDnButton0;
-		if(tmpbutton){
-			i=0x02;
-			for(k=1;k<=tmp_topflr;k++){
-				if( i & tmpbutton){
-					if(k==sRamDArry[mcurfloor]){
-						sRamDArry[mEqualFloor]=(k | DN_READY); 
-						sRamDArry[mDoor]  = (sRamDArry[mDoor] | 0x01);   
-						return(0);
-					}
-					else if(k > sRamDArry[mcurfloor]){
-						sRamDArry[mHighFloor]=(k | DN_READY);
-						sRamDArry[mLowFloor]=0; 
-						return(0);
-					}
-					else{
-						sRamDArry[mHighFloor]=0;
-						sRamDArry[mLowFloor]=(k | DN_READY); 
-						return(0);
-					}
-				}
-				i=(i << 1);
-			}
-		}
- 
-		tmpbutton=TmpCarButton0;
-		if(tmpbutton){
-			i=0x01;
-			for(k=0;k<=tmp_topflr;k++){
-				if( i & tmpbutton){
-					if(k > sRamDArry[mcurfloor]){
-						sRamDArry[mHighFloor]=(k | CAR_READY);
-						sRamDArry[mLowFloor]=0; 
-						return(0);
-					}
-					else if(k < sRamDArry[mcurfloor]){
-						sRamDArry[mHighFloor]=0;
-						sRamDArry[mLowFloor]=(k | CAR_READY); 
-						return(0);
-					}
-				}
-				i=(i << 1);
-			}
-		} 
-	}
-
-	sRamDArry[mCarOpCl]=(unsigned char)TmpCarOpCL;
-	sRamDArry[mCarKey1]=(unsigned char)TmpCarButton0;
-
-}
-#endif
 
 
 
@@ -10445,6 +9963,8 @@ void  __attribute__((section(".usercode")))   IO_Check(void)
     BreakMgtOpenCheck();
     BreakOpenCheck();
    	InvErrChk();
+	CheckFloorSensor();
+	HuntingChk();
 
     OUT_ERR(0);        
 
@@ -10472,21 +9992,36 @@ void  __attribute__((section(".usercode")))   IO_Check(void)
 
 					if(SafetyChk() || (!OpenKeyCheck())){
 			            if( (!IN_LU || !IN_LD) && !bMoveCar && !bLevelFind){
-							bLevelOpen=1;
-							DoorOpenTime=0;
-							sRamDArry[mDoor]    = (sRamDArry[mDoor] & CLEAR_ALL_DOOR_KEY);   							
+                			if(!bDoorCloseOk){
+								if(bLevelOpen==0){
+									if((iF_SolOnTime > 3) && (iF_DoorWaitTime > 3)){
+										SolTimer=0;
+									}
+								}
+								bLevelOpen=1;
+								DoorOpenTime=0;
+								sRamDArry[mDoorSeq] = DOOR_OPEN_START;
+								sRamDArry[mDoor]    = (sRamDArry[mDoor] & CLEAR_ALL_DOOR_KEY);   							
+							}
 						}
 					}	
+
 
 					if(bLevelOpen){
 						ThisFloorDoorCheck();
 						CarOnceStopTime=0;      
-		   				SelectDoorOpen_you();
-
+//			   			SelectDoorOpen_you();
             			if( (bOpenDoorOk) || (DoorOpenTime > cF_OPTTTM)){
 							bLevelOpen=0;
+							SolTimer=100;
+						}
+						else{
+                			if(SolTimer > iF_DoorWaitTime){
+			   					SelectDoorOpen_you();
+							}
 						}
 					}									
+
 
 
                 }
@@ -10529,10 +10064,10 @@ void  __attribute__((section(".usercode")))   IO_Check(void)
 			bDoorJumper=0;
 			DoorJumperNm=0;
             MinuteTime=0;        
-            bEqualFloorError=0;
             bsCleNoOn=0;
 			bLevelFind=0;
 			bRunningOpenOn=0;
+			bEqualFloorError=0;
 
 
 	      	if(OilLopeTypeChk){
@@ -10981,8 +10516,9 @@ int   __attribute__((section(".usercode"))) main(void)
     bBefbsBreakOpen=0;
 	bsBreakMgtOpen=0;    
 	bsBreakOpen=0;
-	bRunningOpenOn=0;
-   
+	bRunningOpenOn=0;   
+	bEqualFloorError=0;
+
     AddressRead();
    
 	for(LogAddressLoop=0;LogAddressLoop <= sec;LogAddressLoop++){
@@ -11067,12 +10603,6 @@ int   __attribute__((section(".usercode"))) main(void)
 //	OnOffFlrResetting();
 
 
-#ifdef	CHEAP     
-TmpBitRG=0xfe;   
-TmpBitFR1=0xff;   
-TmpBitX0=0xff;   
-#endif
-
 
     if(INVERTER_CHECK == IO){
         FindCurFloor();
@@ -11134,9 +10664,6 @@ TmpBitX0=0xff;
 		ReadEncoder();
         AddressRead();
 
-#ifdef	CHEAP
-		ButtonCheck();
-#endif
         IO_Check();                                
         SerialCheck();
         Serial2Check();
@@ -11356,6 +10883,7 @@ void _ISR _T1Interrupt(void)
 //            if(OpenOutOffTime < 250)    OpenOutOffTime++;
             if(CloseOutOffTime < 250)   CloseOutOffTime++;
             if(ExIOTimer < 250)   		ExIOTimer++;
+			if(HuntingTimer < 100)		HuntingTimer++;
 
             if(bUnd){
                 if(VoiceTime < 250) VoiceTime++;

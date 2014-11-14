@@ -969,110 +969,6 @@ void  __attribute__((section(".usercode")))  CarCurFloorRead_IO(void)
 
 
 
-#ifdef	CHEAP
-LocalType  __attribute__((section(".usercode")))  CurFloorRead_OnOff(void)
-{
-    LocalType   j;
-
-    j=0;
-
-
- 	if(!IN_LU || !IN_LD || !IN_SD1 || !IN_SU1){
-		FlrCounter=0;		
-		FlrCounterRst=0;
-	}
-	else{
-		if(!IN_LD_CHEAP){
-
-			if(FlrCounterRst==0){
-				FlrCounter++;		
-				FlrCounterRst=1;
-
-			    if(FlrCounter==2){
-    				if(bCarUpMove){
-				    	if(cF_TOPFLR > sRamDArry[mcurfloor]){
-					        sRamDArry[mcurfloor]++;
-							j++;
-						}
-					}
-    				else if(bCarDnMove){
-				    	if(0 < sRamDArry[mcurfloor]){
-					        sRamDArry[mcurfloor]--;
-							j++;
-						}
-					}
-			    }
-			}
-		}	 
-		else{
-			FlrCounterRst=0;
-		}
-	}
-
-///////////////////////	if(FlrCounter > 2)	j=2;
-		
-
-
-    if(!IN_SD1){
-        sRamDArry[mcurfloor]=0;
-        j++;
-    }
-    if(!IN_SU1){
-        sRamDArry[mcurfloor]=cF_TOPFLR;
-        j++;
-    }
-
-
-
-/*
-
-
-    if(!IN_X0 && (cF_TOPFLR >= 2)){
-        sRamDArry[mcurfloor]=1;
-        j++;
-    }
-    if(!IN_X1 && (cF_TOPFLR >= 3)){
-        sRamDArry[mcurfloor]=2;
-        j++;
-    }
-    if(!IN_X2 && (cF_TOPFLR >= 4)){
-        sRamDArry[mcurfloor]=3;
-        j++;
-    }
-    if(!IN_X3 && (cF_TOPFLR >= 5)){
-        sRamDArry[mcurfloor]=4;
-        j++;
-    }
-    if(!IN_X4 && (cF_TOPFLR >= 6)){
-        sRamDArry[mcurfloor]=5;
-        j++;
-    }
-    if(!IN_X5 && (cF_TOPFLR >= 7)){
-        sRamDArry[mcurfloor]=6;
-        j++;
-    }
-    if(!IN_X6 && (cF_TOPFLR >= 8)){
-        sRamDArry[mcurfloor]=7;
-        j++;
-    }
-
-*/
-
-    bD_F_FloorOn=0;
-
-    if(j == 1){
-        bD_F_FloorOn=1;        
-    }
-    else if(j >= 2){
-        bCarErr=1;
-
-		FlrCounter=0;		
-		FlrCounterRst=0;
-    }
-    
-    return(j);
-}
-#else
 LocalType  __attribute__((section(".usercode")))  CurFloorRead_OnOff(void)
 {
     LocalType   j;
@@ -1124,15 +1020,19 @@ LocalType  __attribute__((section(".usercode")))  CurFloorRead_OnOff(void)
 
     if(j == 1){
         bD_F_FloorOn=1;        
+		bEqualFloorError=0;
     }
     else if(j >= 2){
-        bCarErr=1;
+		if( !IN_AUTO){
+            bEqualFloorError=1;
+			bCarErr=1;
+		}
+		else	bEqualFloorError=0;
     }
     
     return(j);
 }
 
-#endif
 
 
 

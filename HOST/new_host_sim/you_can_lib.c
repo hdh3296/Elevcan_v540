@@ -96,13 +96,8 @@ void LoadCanBuffer(unsigned int i)
             CAN_Buf[1]= sRamDArry[I_EMG];
             CAN_Buf[2]= sRamDArry[I_SU1];
 
-#ifdef	CHEAP
-            CAN_Buf[3]= (unsigned char)TmpUpButton0;     
-            CAN_Buf[4]= (unsigned char)TmpDnButton0;
-#else
             CAN_Buf[3]= sRamDArry[I_GR];     
             CAN_Buf[4]= sRamDArry[I_FIRE];
-#endif
 
             CAN_Buf[5]=(sRamDArry[mMostLongDst]    + (unsigned char)(cF_START_FLOOR));
             CAN_Buf[6]= (unsigned char)(cF_START_FLOOR);

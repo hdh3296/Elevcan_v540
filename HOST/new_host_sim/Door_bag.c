@@ -413,14 +413,14 @@ void  __attribute__((section(".usercode"))) MainDoorOpenCmd_abc(void)
 {
     DoorPortInit_abc();
 
-
-    if(!bOpenEnd || DoorOpenSetCheck() )	     OUT_OP(1);      
-
-
-    if((USE_CHECK == BAGGAGE_USE) || (USE_CHECK == CARLIFT_USE)){
-        if(!bHoleDoorOpenEnd && (!IN_LU || !IN_LD) )  OUT_HOP(1);   //main sub hole door  open    1
-    }
-
+    if(!bFlrMatchChk){
+	    if(!bOpenEnd || DoorOpenSetCheck() )	     OUT_OP(1);      
+	
+	
+	    if((USE_CHECK == BAGGAGE_USE) || (USE_CHECK == CARLIFT_USE)){
+	        if(!bHoleDoorOpenEnd && (!IN_LU || !IN_LD) )  OUT_HOP(1);   //main sub hole door  open    1
+	    }
+	}
 }
 
 
@@ -429,13 +429,14 @@ void  __attribute__((section(".usercode"))) SubDoorOpenCmd_abc(void)
 {
     DoorPortInit_abc();
 
-    if(!bOpenEnd || DoorOpenSetCheck() )       OUT_OP_S(1);      
-
-
-    if((USE_CHECK == BAGGAGE_USE) || (USE_CHECK == CARLIFT_USE)){
-        if(!bOpenEnd)                                       OUT_OP(1);      
-        if(!bHoleDoorOpenEnd && (!IN_LU || !IN_LD) )        OUT_HOP(1);      //main sub hole door open 2
-    }   
+    if(!bFlrMatchChk){
+	    if(!bOpenEnd || DoorOpenSetCheck() )       OUT_OP_S(1);      	
+	
+	    if((USE_CHECK == BAGGAGE_USE) || (USE_CHECK == CARLIFT_USE)){
+	        if(!bOpenEnd)                                       OUT_OP(1);      
+	        if(!bHoleDoorOpenEnd && (!IN_LU || !IN_LD) )        OUT_HOP(1);      //main sub hole door open 2
+	    }   
+	}
 
 }
 
@@ -505,6 +506,7 @@ void	__attribute__((section(".usercode"))) SelectDoorOpen_abc(void)
         OUT_D_S(1);                     //sel door          
 		SubDoorOpenCmd_abc();	
     }
+
 
     if(!bMoveCar){
         if(sRamDArry[mSysStatus] > sOPEN)   sRamDArry[mSysStatus]=sOPEN;      
@@ -614,9 +616,8 @@ void    __attribute__((section(".usercode"))) HoleDoorCloseEndCheck(UserDataType
 	if(i==0){
       	if(movecar){
 			if( !bRunningOpenOn){
-				if(!bRelevelErr){
-					bsHdsRunOff=1;
-				}
+//				if(!bRelevelErr)	bsHdsRunOff=1;
+				if( !bManualStop)	bsHdsRunOff=1;
 			}
         }
    		bHoleDoorCloseEnd=0;
@@ -650,12 +651,10 @@ void    __attribute__((section(".usercode"))) CarDoorCloseEndCheck(UserDataType 
 
 	if(i==0){
       	if(movecar){
-//			if(!RunningOpenAction())
-
 			if( !bRunningOpenOn){
-				if(!bRelevelErr)
-					bsCleRunOff=1;
-				}	
+				if( !bManualStop)	bsCleRunOff=1;
+//				if( !bRelevelErr)	bsCleRunOff=1;
+			}	
         }
    		bCarDoorCloseEnd=0;
    	}

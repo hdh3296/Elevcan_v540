@@ -9,10 +9,8 @@
 #include  "counter.h"
 
 
-#ifndef		CHEAP
 
 
-//#define	SAMSUNG_FIRE	1
 
 #ifdef		SAMSUNG_FIRE
 unsigned int	SamsungFire;
@@ -297,13 +295,6 @@ void  __attribute__((section(".usercode")))     FireKeyCheck(void)
 
     Fire();
 }
-
-#else
-void  __attribute__((section(".usercode")))     FireKeyCheck(void)
-{
-	return;
-}
-#endif
 
 
 
