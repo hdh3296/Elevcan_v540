@@ -224,14 +224,14 @@ void  MyAdrRead(void)
 {
 
    MyAddress=0;
-      
-   if(!RA0)       MyAddress=MyAddress | 0x01;       
-   if(!RA1)       MyAddress=MyAddress | 0x02;       
-   if(!RA2)       MyAddress=MyAddress | 0x04;       
-   if(!RA3)       MyAddress=MyAddress | 0x08;      
+   //dip switch   
+   if(!RA0)       MyAddress=MyAddress | 0x01;   //p1.0    
+   if(!RA1)       MyAddress=MyAddress | 0x02;   //p1.1    
+   if(!RA2)       MyAddress=MyAddress | 0x04;   //p1.2    
+   if(!RA3)       MyAddress=MyAddress | 0x08;   //p1.3   
 
 #ifdef	CPU45K80
-   if(!RA5)       MyAddress=MyAddress | 0x10;       
+   if(!RA5)       MyAddress=MyAddress | 0x10;  //p1.4     
 #else
    if(!RA4)       MyAddress=MyAddress | 0x10;       
 #endif
@@ -416,7 +416,7 @@ void main(void)
     CmpSetBit=0;            //new
     MaskSetBit=0;           //new
     
-    MyAdrRead();
+    MyAdrRead(); //dip switch Ãþ¼³Á¤.
 
 
     LoadSetupValue();  //1
