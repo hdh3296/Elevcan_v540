@@ -154,6 +154,7 @@ extern  bit   	bCmdDnKey;
 extern	bit		bSlaveParking;
 extern	bit		bParkingBd;
 extern	bit		bParkingCmdValid;
+extern	bit		bParkingIgnor;
 
 extern	unsigned char ParkingKeyTime;
 extern	unsigned char ParkingCmdCnt;

@@ -148,6 +148,10 @@ void	MyLampCheck(void)
 {			
 	if( !(RxEidBuffer & 0x80)){
 	    if((EqualDataBuf[1] & 0x1f) == (MyAddress-1)){
+	        if(EqualDataBuf[0] == CAN_PARKING_COMMAND){
+				bParkingIgnor=1;	
+			}
+
 	        if(!SubDoorMainDoorCheck()){
 	            if(EqualDataBuf[0] == CAN_KEY_CLEAR){
 	                if(EqualDataBuf[1] & UP_READY){
@@ -618,6 +622,7 @@ void interrupt isr(void)
 		if(!HIB_PARKING_KEY){
 			if(ParkingKeyTime > 100){
 				bSlaveParking = 1;
+				bParkingIgnor=0;	
 			}
 		}
 		else{

@@ -19,6 +19,7 @@
 bit	bParkingBd =0;
 bit	bSlaveParking =0;
 bit	bParkingCmdValid=0;
+bit	bParkingIgnor=0;
 unsigned char ParkingKeyTime=0;
 unsigned char ParkingCmdCnt=0;
 
@@ -1467,7 +1468,8 @@ unsigned char  SlaveParkingChk(void)
 			CanKeyValue[2] = (CanKeyValue[2] | HIB_PARKING_BIT);
 			ParkingCmdCnt = 0;
 		}
-		else if(Parking && !bSlaveParking && (ParkingCmdCnt < 20) ){
+//		else if(Parking && !bSlaveParking && (ParkingCmdCnt < 20) ){
+		else if(Parking && !bSlaveParking && !bParkingIgnor && (ParkingCmdCnt < 20)){
 			bParkingCmdValid=1;
 			CanKeyValue[2] = (CanKeyValue[2] & ~HIB_PARKING_BIT);
 		}
