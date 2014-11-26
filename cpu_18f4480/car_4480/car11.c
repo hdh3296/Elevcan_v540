@@ -1302,8 +1302,24 @@ void  SetKeyButton(void)
         CarKey[j]     = oldscan[j];   
       }         
    }
+
+
+		
+	if(Vip || BefVip){
+		if(Vip != BefVip){
+			if(!CarMove){		
+		     	for(j=0;j<4;j++){      
+		        	ClrKey[j]     = 0x0;  
+		        	ToggleKey[j]  = 0x0;
+		        	CarKey[j]     = 0x0;   
+		      	}      
+				BefVip=Vip;
+			}
+		}	   		
+	}
 		
 
+/*
 	if(Vip){
 		if(!CarMove){		
 			if(!BefVip){
@@ -1320,7 +1336,7 @@ void  SetKeyButton(void)
 	else{
 		BefVip=Vip;
 	}
-
+*/
 
 /*
 //////
