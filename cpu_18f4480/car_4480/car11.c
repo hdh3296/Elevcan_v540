@@ -1382,6 +1382,8 @@ if(Auto && !CarMove){
 
 	bDoorOpenWaitOn=0;
 
+// 32 층  사용시 아래를 막음 
+ 
 	if(Auto && Open && !CarMove){
 		if(newscan[3] & 0x80){
 			bDoorOpenWaitOn=1;
@@ -1389,7 +1391,14 @@ if(Auto && !CarMove){
 		}
 	}
 
-//open wait
+// 32 층  사용시 위를 막음
+
+
+
+
+
+
+
 
 
 /*
@@ -2130,18 +2139,17 @@ void interrupt isr(void)
         }
         
         else if(a==3){   
-//            DATA_PORT=(CarKey[3] | YourKey[3]);
-
-
             tmp_buf=(CarKey[3] | YourKey[3]);
-			tmp_buf=(tmp_buf & 0x1f);
 
+// 32 층  사용시 아래를 막음 
+			tmp_buf=(tmp_buf & 0x1f);
 			if(UpMove)							tmp_buf=(tmp_buf | 0x20);	
 			if(DnMove)							tmp_buf=(tmp_buf | 0x40);	
 			if(bErrorCar )						tmp_buf=(tmp_buf | 0x80);	
+
+// 32 층  사용시 위를 막음 
+
 			DATA_PORT=tmp_buf;
-
-
 
 
             SEL0=1;

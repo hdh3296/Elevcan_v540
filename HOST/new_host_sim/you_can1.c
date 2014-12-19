@@ -718,8 +718,32 @@ unsigned int  __attribute__((section(".usercode")))  HibBoardDataReceive(void)
     	i=(C1RX0B2 & 0x00ff);
 		if(i & 0x02){
 			bSlavePrk=1;
+			bSubSlavePrk=0;
+            if(seconddoor & 0x01)   	bSubSlavePrk=1;
 		}
 		else	bSlavePrk=0;
+    }
+
+    else if(cmd==CAN_EARTHQUAKE_COMMAND){    
+    	i=(C1RX0B2 & 0x00ff);
+		if(i & 0x02){
+			bSlaveEarthquake=1;
+		}
+		else	bSlaveEarthquake=0;
+    }
+
+
+    else if(cmd==CAN_FIRE_COMMAND){    
+    	i=(C1RX0B2 & 0x00ff);
+		if(i & 0x02){
+			bSlaveFire=1;
+			bSubSlaveFire=0;
+            if(seconddoor & 0x01)   	bSubSlaveFire=1;
+		}
+		else{
+			bSlaveFire=0;
+			bSubSlaveFire=0;	
+		}
     }
 
 

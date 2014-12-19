@@ -6,37 +6,9 @@
 #include "cpu_init.h"
 #include "com.h"
 #include "textlcd.h"
-#include "serial.h"
 
 
-
-    __CONFIG(1, (RETEN_OFF & INTOSCSEL_LOW & SOSCSEL_DIG & XINST_OFF & FOSC_HS1 & PLLCFG_ON & FCMEN_OFF & IESO_OFF  & 0xffff));                   
-    __CONFIG(2, (PWRTEN_ON & BOREN_SBORDIS & BOREN_ON & BORV_1 & BORPWR_LOW  & WDTEN_NOSLP & WDTPS_64 & 0xffff));         
-    __CONFIG(3, (CANMX_PORTB & MSSPMSK_MSK7 & MCLRE_ON   & 0xffff));                         // PORTB digital on RESET
-    __CONFIG(4, (STVREN_ON & BBSIZ_BB2K & 0xffff));    
-                                                                                // DEBUG disabled,
-                                                                                // XINST disabled
-                                                                                // LVP disabled
-                                                                                // STVREN enabled
-    __CONFIG(5, (CP0_OFF& CP1_OFF & CP2_OFF & CP3_OFF & CPB_OFF & CPD_OFF & 0xffff));                                          // code unprotect
-    __CONFIG(6, (WRT0_OFF & WRT1_OFF & WRT2_OFF & WRT3_OFF & WRTC_OFF & WRTB_OFF & WRTD_OFF & 0xffff));                                              // code unprotect
-    __CONFIG(7, (EBTR0_OFF & EBTR1_OFF & EBTR2_OFF & EBTR3_OFF & EBTRB_OFF & 0xffff));                                               // code unprotect
-
-
-/*
-    __CONFIG(1, 0x0e09);          
-    __CONFIG(2, 0x1019);         
-    __CONFIG(3, 0x8100);                         
-    __CONFIG(4, 0x0081);    
-    __CONFIG(5, 0xc00f);                                          
-    __CONFIG(6, 0xe00f);                                              
-    __CONFIG(7, 0x400f);                                              
-*/
-
-#define	 MY_COMPANY		'A'
-
-
-#define	 KeyPORT	PORTB
+#define	 KeyPORT	PORTA
  
 #define  EEP_SAVE_CMD    0x28
 #define  EEP_READ_CMD    0x27
@@ -93,58 +65,6 @@ extern  void    Timer0Init();
 */
 
 
-volatile const unsigned char Block0[]=	{  0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-										   0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-										   0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-										   0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-										   0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-										   0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-										   0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-										   0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-										   0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-										   0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-										   0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-										   0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-										   0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-										   0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-										   0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-										   0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-										   0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-										   0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-										   0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-										   0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-										   0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-										   0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-										   0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-										   0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-										   0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-										   0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-										   0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-										   0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-										   0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-										   0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-										   0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-										   0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-										   0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-										   0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-										   0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-										   0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-										   0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-										   0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-										   0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-										   0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-										};
-
-	
-										
-unsigned char tmpram[16];
-far unsigned char * source_ptr = (far unsigned char *)tmpram;                    /*pointers to data*/
-far unsigned char * dest_ptr;
-unsigned char size = 16;						
-
-
-
-
 unsigned char  src;
 unsigned char  firstdata;
 unsigned char  seconddata;
@@ -167,16 +87,17 @@ bit   bKeyValid;
 bit   bKeyOn;
 
 
+//const   unsigned  char    KeyValue[]={'e','d','u','c','m'};
 
-//const   unsigned  char    Daesung[20]	={"<Daesung I.D.S> "};
+const   unsigned  char    Blanck[20]  ={"                "};
+const   unsigned  char    Daesung[20] ={"<DAESUNG I.D.S> "};
+const   unsigned  char    Wait[20]    ={"Wait..Initial.. "};
 
 
-const   unsigned  char    Blanck[20]	={"                "};
-const   unsigned  char    Wait[20]    	={"..Wait.......(A)"};
-const   unsigned  char    ReadBack[20]	={"Wait.Read......."};
-const   unsigned  char    WriteBack[20] ={"Wait.Write......"};
-const   unsigned  char    Daesung[20]   ={"Welcome.(v02.0)."};
-
+//   LCD_String_Out(0,0,"                ");      
+//   LCD_String_Out(0,1,"                ");      
+//   LCD_String_Out(0,0,"<DAESUNG I.D.S> ");         
+//   LCD_String_Out(0,1,"Wait..Initial.. ");    
 
 
 unsigned       char        Message1[17];
@@ -219,7 +140,7 @@ void    HextoASCIIByte(void)
 int    SlaveTx(void)
 {
    RxBuffer[0]  = ACK;
-   RxBuffer[1]  = MY_COMPANY;
+   RxBuffer[1]  = 'A';
    RxBuffer[2]  = CurKey;
    RxBuffer[3]  = ETX; 
    RxBuffer[4]  = 0; 
@@ -228,6 +149,12 @@ int    SlaveTx(void)
    
    return(1);
 }
+
+
+
+/*
+*/
+
 
 
 
@@ -290,14 +217,11 @@ void  KeyCheck(void)
 
 
 
+
 unsigned int ImportData(void)
 {
-	unsigned char high,low,good;
-	unsigned char i,j,k;
-
-	unsigned int  blkpt;
-
-	good=0;
+	unsigned char high,low;
+	unsigned char i,j,k,blkpt;
 
 	if(RxBuffer[3] >= 'A') 	j=(RxBuffer[3] - '7');
 	else 					j=(RxBuffer[3] - '0');
@@ -306,9 +230,11 @@ unsigned int ImportData(void)
 	else 					k=(RxBuffer[4] - '0');
 
 	j=(j * 10)+ k;
+	blkpt=j;
 
-	blkpt=(unsigned int)(j * 16);
+	j=(j*16);
 
+	j=(j % 64);
 
 	for(i=0;i<16;i++){
 		k=(2*i);
@@ -318,27 +244,15 @@ unsigned int ImportData(void)
 		high=((high << 4) & 0xf0);
 		if(RxBuffer[6+k] >= 'A') 	low =(RxBuffer[6+k] - '7');
 		else 						low =(RxBuffer[6+k] - '0');
-
-		if(Block0[blkpt+i] != (high | low) )	good=1;	
-
-		tmpram[i] = (high | low);
+		tmpram[j+i] = (high | low);
 	}
 
-	if(good==1){
-		dest_ptr =(far unsigned char *)(&Block0[blkpt]);
-		flash_write(source_ptr,size,dest_ptr);
+	blkpt++;
+	if(((blkpt%4)==0) && (blkpt>1)){
+		blkpt=(blkpt/4);
+		blkpt--;
+		BlockWrite((unsigned char)blkpt);
 	}
-
-
-	RxBuffer[0] = ACK;
-	RxBuffer[1] = 'w';
-	RxBuffer[2] = 'F';
-	RxBuffer[37] = ETX;
-	RxBuffer[38] = 0;
-
-	Serial();
-
-
 	for(i=0;i<16;i++){
 		Message2[i]=ReadBack[i];
 	}
@@ -348,20 +262,20 @@ unsigned int ImportData(void)
 	Message2[16]=0x0;
 	LCD_String_Out(0,1,&Message2[0]);
 
+	RxBuffer[0] = ACK;
+	RxBuffer[1] = 'w';
+	RxBuffer[37] = ETX;
+	RxBuffer[38] = 0;
+	Serial();
 	bKeyValid=0;
 	main_timer=0;
-
 	return(1);
 }
 
 
 unsigned int ExportData(void)
 {
-	unsigned char i,j,k,high,low,good;
-
-	unsigned int  blkpt;
-
-	good=1;
+	unsigned char i,j,k,high,low,blk,pt,datax;
 
 	if(RxBuffer[3] >= 'A') 	j=(RxBuffer[3] - '7');
 	else 					j=(RxBuffer[3] - '0');
@@ -370,10 +284,15 @@ unsigned int ExportData(void)
 	else 					k=(RxBuffer[4] - '0');
 
 	j=(j * 10)+ k;
+	l=j;
 
+	if(j > 32){
+		j=0;
+		l=0;
+	}
 
-	blkpt=(unsigned int)(j * 16);
-
+	blk=(unsigned char)(j/64);
+	pt=(unsigned char)(j%64);
 
 	for(i=0;i<16;i++){
 		k=(2*i);
@@ -384,26 +303,24 @@ unsigned int ExportData(void)
 		if(RxBuffer[6+k] >= 'A') 	low =(RxBuffer[6+k] - '7');
 		else 						low =(RxBuffer[6+k] - '0');
 
-		if(Block0[blkpt + i] != (high | low)) good=0;
+		if(datax != (high | low)) good=0;
 	}
 
-
-	if(good) j++;
-
+	if(good) l++;
 	RxBuffer[0] = ACK;
 	RxBuffer[1] = 'r';
 	RxBuffer[2] = 'F';
 
-	j=(j%100);
-	RxBuffer[3] = (j/10) + '0';
-	RxBuffer[4] = (j%10) + '0';
+	l=(l%100);
+	RxBuffer[3] = (l/10) + '0';
+	RxBuffer[4] = (l%10) + '0';
 
-	blkpt=(unsigned int)(j * 16);
-
+	l=(l*16);
+	blk=(unsigned char)(l/64);
+	pt=(unsigned char)(l%64);
 
 	for(i=0;i<16;i++){
 		k=(i*2);
-		src=Block0[blkpt+i];
 		HextoASCIIByte();
 		RxBuffer[5+k] = firstdata;
 		RxBuffer[6+k] = seconddata;
@@ -413,19 +330,13 @@ unsigned int ExportData(void)
 	RxBuffer[5+k] = ETX;
 	RxBuffer[6+k] = 0;
 
-
-	Serial();
-
 	for(i=0;i<16;i++){
 		Message2[i]=WriteBack[i];
 	}
 
-	Message2[14]=RxBuffer[3];
-	Message2[15]=RxBuffer[4];
 	Message2[16]=0x0;
 	LCD_String_Out(0,1,&Message2[0]);
-
-
+	Serial();
 	bKeyValid=0;
 	main_timer=0;
 	return(1);
@@ -487,28 +398,27 @@ unsigned int  NewDisplayLadder(void)
 
 }
 
-
-
+///////////////////////
 
 
 
 void main(void)
 {
-   	unsigned char  i;
-	
+   unsigned char  i;
+
 	di();
 	Initial();
 	Init_Comms();
 	Timer0Init();
     ei();
-PEIE=1;
-TRISB=0xff;
 
-   	RxStatus=STX_CHK;
+   RxStatus=STX_CHK;
 
 
-   	LcdInit();
-   	LcdInit();
+/////	BlockWrite(1);  //////test
+
+   LcdInit();
+   LcdInit();
 
 	CLRWDT();
 
@@ -524,34 +434,34 @@ TRISB=0xff;
     }
     Message1[16]=0x0;  
 	CLRWDT();
-    LCD_String_Out(0,0,&Message1[0]);
 
+    LCD_String_Out(0,0,&Message1[0]);
 
     for(i=0;i<16;i++){
         Message1[i]=Wait[i];  
     }
-    Message1[14]=MY_COMPANY;  
     Message1[16]=0x0;  
 	CLRWDT();
-	
+
     LCD_String_Out(0,1,&Message1[0]);     
+   LCD_Command(dON_cOFF_bOFF);
 
-   	LCD_Command(dON_cOFF_bOFF);
+   LcdTimer=0;
+   while(LcdTimer<150) CLRWDT();
 
-	
-	for(i=0;i<5;i++){
-	   	LcdTimer=0;
-	   	while(LcdTimer<150) CLRWDT();
-	}
+   LcdTimer=0;
+   while(LcdTimer<150)	CLRWDT();
+
    
-   	LcdTimer=0;
-   	RxStatus=STX_CHK;
+   LcdTimer=0;
+   RxStatus=STX_CHK;
    
    while(1){
-		CLRWDT();
+	CLRWDT();
 
       if(RxStatus==RX_GOOD){
             RxStatus=STX_CHK;
+
             NewDisplayLadder();   
             
             if(bKeyValid){
@@ -560,7 +470,7 @@ TRISB=0xff;
                main_timer=0;                  
             }      
       }
-      KeyCheck();		
+      KeyCheck();
    }
 }
 
@@ -591,29 +501,20 @@ void interrupt isr(void)
         USART0_TXC();
         TXIF=0;
 	}	
-
-	if(OERR1) {
-      	TXEN1=0;
-      	TXEN1=1;
-      	SPEN1=0;
-      	SPEN1=1;
-		CREN1=0;
-    }
-
-	if( !CREN1)	CREN1=1;
-
-/*
-	if(FERR1 || OERR1){
-		RCREG=RCREG;
-		FERR1=0;
- 		OERR1=0;	
-
-		RCSTA=0;	
-		RCSTA = (NINE_BITS | 0x90);
-	}
-*/
 }
 
 
 
+/*
+interrupt [0x0B] void T0_int (void)      
+{   
+   TH0=0xf7;
+   TL0=0x00;
+   SerialTime++;
+   LcdTimer++;           
+   if(Charter<150)   Charter++;
+
+   main_timer++;    
+}
+*/
 

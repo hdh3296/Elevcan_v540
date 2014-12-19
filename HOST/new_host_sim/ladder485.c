@@ -1785,6 +1785,7 @@ void    __attribute__((section(".usercode"))) CanComDsp(void)
 
 void    __attribute__((section(".usercode"))) SetBitData(LocalType  pt)
 {
+
     if(pt & 0x01)  New485Ladder[SECONDLINE_BASE+EditBlanck+5] = '1';
     else           New485Ladder[SECONDLINE_BASE+EditBlanck+5] = '0';
     if(pt & 0x02)  New485Ladder[SECONDLINE_BASE+EditBlanck+6] = '1';
@@ -1801,6 +1802,7 @@ void    __attribute__((section(".usercode"))) SetBitData(LocalType  pt)
     else           New485Ladder[SECONDLINE_BASE+EditBlanck+11]= '0';
     if(pt & 0x80)  New485Ladder[SECONDLINE_BASE+EditBlanck+12]= '1';
     else           New485Ladder[SECONDLINE_BASE+EditBlanck+12]= '0';
+
 }
 
 
@@ -2879,20 +2881,14 @@ void  __attribute__((section(".usercode"))) TimerGroup(void)
             Integer_Digit();
             break;
 
+        case    0:
+        case    1:
+		case	2:
         case    18:
         case    19:
         case    20:
         case    21:
         case    22:
-
-//            Cursor=0;
-//            ShiftCnt=5;
-//            EditBlanck=5;
-//            EditStatus=DIGIT_EDIT;
-//            DigitMinValue=0;
-//            DigitMaxValue=65535;
-//            DigitData=iF_FLRDSPCH(F_BrkStTm10);
-
             Cursor=0;
             ShiftCnt=3;
             EditBlanck=5;
@@ -2901,89 +2897,40 @@ void  __attribute__((section(".usercode"))) TimerGroup(void)
             DigitMaxValue=254;
             i=(LadderGroupSub + F_OpWtTm);
 			DigitData=cF_FLRDSPCH((unsigned long)i);
-
             Integer_Digit();
             break;
 /*
-        case    19:
-            Cursor=0;
-            ShiftCnt=5;
-            EditBlanck=5;
-            EditStatus=DIGIT_EDIT;
-            DigitMaxValue=65535;
-            DigitMinValue=0;
-            DigitData=iF_FLRDSPCH(F_BrkStTm20);
-            Integer_Digit();
-            break;
-        case    20:
-            Cursor=0;
-            ShiftCnt=5;
-            EditBlanck=5;
-            EditStatus=DIGIT_EDIT;
-            DigitMaxValue=65535;
-            DigitMinValue=0;
-
-            DigitData=iF_FLRDSPCH(F_BrkStTm30);
-            Integer_Digit();
-            break;
-        case    21:
-            Cursor=0;
-            ShiftCnt=5;
-            EditBlanck=5;
-            EditStatus=DIGIT_EDIT;
-            DigitMaxValue=65535;
-            DigitMinValue=0;
-
-            DigitData=iF_FLRDSPCH(F_BrkStTm40);
-            Integer_Digit();
-            break;
-        case    22:
-            Cursor=0;
-            ShiftCnt=5;
-            EditBlanck=5;
-            EditStatus=DIGIT_EDIT;
-            DigitMaxValue=65535;
-            DigitMinValue=0;
-
-            DigitData=iF_FLRDSPCH(F_BrkStTm50);
-            Integer_Digit();
-            break;
-*/
-
         case    0:
         case    1:
 		case	2:
-            i=(LadderGroupSub + F_OpWtTm);
             Cursor=0;
             ShiftCnt=3;
             EditBlanck=5;
             EditStatus=DIGIT_EDIT;
-            DigitMaxValue=254;
             DigitMinValue=0;
+            DigitMaxValue=254;
+            i=(LadderGroupSub + F_OpWtTm);
             DigitData=cF_FLRDSPCH((unsigned long)i);
             Integer_Digit();    
 			break;
+*/
         case    3:
             i=(LadderGroupSub + F_OpWtTm);
             Cursor=0;
             EditBlanck=6;
             EditStatus=DIGIT_EDIT;
-//            ShiftCnt=2;
-//            DigitMaxValue=95;
             ShiftCnt=3;
             DigitMaxValue=200;
             DigitMinValue=0;
             DigitData=cF_FLRDSPCH((unsigned long)i);
             Integer_Digit();    
             break;
-//        case    2:
         case    5:
         case    6:
         case    4:
         case    8:
         case    9:
         case   10:
-//        case   12:
             i=(LadderGroupSub + F_OpWtTm);
             Cursor=0;
             ShiftCnt=2;
@@ -2994,7 +2941,6 @@ void  __attribute__((section(".usercode"))) TimerGroup(void)
             DigitData=cF_FLRDSPCH((unsigned long)i);
             Integer_Digit();    
             break;
-//        case    4:
         case    7:
         case    11:
         case    12:
@@ -3213,8 +3159,6 @@ void  __attribute__((section(".usercode"))) IoGroup(void)
 
         if(INVERTER_CHECK == IO)      DigitMaxValue=IO_PORT_MESSAGE_CNT-1;
         else                          DigitMaxValue=IO_PORT_MESSAGE_CNT;
-//kkk        if(cF_BD_ID == IO_INVERTER) DigitMaxValue=IO_PORT_MESSAGE_CNT-1;
-//kkk        else                        DigitMaxValue=IO_PORT_MESSAGE_CNT;
 
         DigitData=cF_FLRDSPCH((unsigned long)i);
         Integer_Digit();
@@ -3226,11 +3170,6 @@ void  __attribute__((section(".usercode"))) IoGroup(void)
         if(INVERTER_CHECK == IO)        DigitMaxValue=ELEV_SPEED_MESSAGE_CNT;
         else                            DigitMaxValue=ELEV_SPEED_MESSAGE_CNT;
 
-//        if(INVERTER_CHECK == IO)        DigitMaxValue=IO_PORT_MESSAGE_CNT-1;
-//        else                            DigitMaxValue=IO_PORT_MESSAGE_CNT;
-
-//kkk        if(cF_BD_ID == IO_INVERTER) DigitMaxValue=IO_PORT_MESSAGE_CNT-1;
-//kkk        else                        DigitMaxValue=IO_PORT_MESSAGE_CNT;
 
         DigitData=cF_FLRDSPCH((unsigned long)i);
         Integer_Digit();

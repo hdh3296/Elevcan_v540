@@ -1,4 +1,13 @@
 
+/*
+//Earthquake  routine
+//bsEarthquake 
+//bBefbsEarthquake
+//bSlaveEarthquake
+//unsigned int  __attribute__((section(".usercode")))   EarthquakeCheck(void)
+//ButtonClrCheck();   
+*/
+
 
 //door open wait
 //over heat
@@ -204,6 +213,7 @@ UserDataType    StateBit2=0;
 UserDataType    StateBit3=0;   
 UserDataType    StateBit4=0;   
 UserDataType    StateBit5=0;   
+UserDataType    StateBit6=0;   
 UserDataType    Vip_Floor=0;   
 
 
@@ -407,7 +417,7 @@ const unsigned char StatusMessage[][16]={
                                       "CarDoor Jumper  ",      //033                                                                           
                                       "HallDoor Jumper ",      //034
                                       "CarHall Jumper  ",      //035
-                                      "036             ",      //036
+                                      "Earthquake      ",      //036
                                       "037             ",      //037
                                       "038             ",      //038
                                       "039             ",      //039
@@ -1011,6 +1021,7 @@ UserDataType  __attribute__((section(".usercode"))) ReadInitSetupData(void)
     if(VersionCheck()){
 		SaveVerify = 0x55;
 
+
         b_LdTmpBufRam(F_TopFlr)         = Init_TopFlr;
         b_LdTmpBufRam(F_PrkFlr)         = Init_PrkFlr;
         b_LdTmpBufRam(F_OpWtTm)         = Init_OpWtTm;      
@@ -1031,16 +1042,6 @@ UserDataType  __attribute__((section(".usercode"))) ReadInitSetupData(void)
         b_LdTmpBufRam(F_X6SafeFlr)      = Init_X6SafeFlr;
         b_LdTmpBufRam(F_X5SafeFlr)      = Init_X5SafeFlr;
 
-/*        
-        b_LdTmpBufRam(F_SubDoorFlr1)    = Init_SubDoorFlr1;
-        b_LdTmpBufRam(F_SubDoorFlr2)    = Init_SubDoorFlr2;
-        b_LdTmpBufRam(F_SubDoorFlr3)    = Init_SubDoorFlr3;
-        b_LdTmpBufRam(F_SubDoorFlr4)    = Init_SubDoorFlr4;
-        b_LdTmpBufRam(F_SubDoorFlr5)    = Init_SubDoorFlr5;
-        b_LdTmpBufRam(F_SubDoorFlr6)    = Init_SubDoorFlr6;
-        b_LdTmpBufRam(F_SubDoorFlr7)    = Init_SubDoorFlr7;
-        b_LdTmpBufRam(F_SubDoorFlr8)    = Init_SubDoorFlr8;
-*/
 
         b_LdTmpBufRam(F_NonService0)    = Init_ALL_FF;
         b_LdTmpBufRam(F_NonService1)    = Init_ALL_FF;
@@ -1094,7 +1095,7 @@ UserDataType  __attribute__((section(".usercode"))) ReadInitSetupData(void)
         bit_LdTmpBufRamReset(F_OnOff3,bRunOpenSetClear      % 8);
         bit_LdTmpBufRamSet(F_OnOff3,bManWorkingChk      	% 8);
 
-        SWPAB   = 0;    //****
+        SWPAB   = 0;   
 
 
         b_LdTmpBufRam(F_FanTime)        = Init_FanTime;        //3 sec
@@ -1125,11 +1126,6 @@ UserDataType  __attribute__((section(".usercode"))) ReadInitSetupData(void)
         b_LdTmpBufRam(F_DoorWaitTime)    = Init_DoorWait_Time;
 
 
-//        i_LdTmpBufRam(F_BrkStTm10)      = Init_BrkStTm10;        
-//        i_LdTmpBufRam(F_BrkStTm20)      = Init_BrkStTm20;
-//        i_LdTmpBufRam(F_BrkStTm30)      = Init_BrkStTm30;
-//        i_LdTmpBufRam(F_BrkStTm40)      = Init_BrkStTm40;
-//        i_LdTmpBufRam(F_BrkStTm50)      = Init_BrkStTm50;
 
 #ifdef  TEST_SIMULATION  
         b_LdTmpBufRam(F_TopFlr)         = 31;
@@ -1144,39 +1140,6 @@ UserDataType  __attribute__((section(".usercode"))) ReadInitSetupData(void)
 		for(i=0;i<32;i++){
         	b_LdTmpBufRam(F_0506+i)           = DISABLE_FLR;
 		}
-/*
-        b_LdTmpBufRam(F_0607)           = DISABLE_FLR;
-        b_LdTmpBufRam(F_0708)           = DISABLE_FLR;
-        b_LdTmpBufRam(F_0809)           = DISABLE_FLR;
-        b_LdTmpBufRam(F_0910)           = DISABLE_FLR;
-        b_LdTmpBufRam(F_1011)           = DISABLE_FLR;
-        b_LdTmpBufRam(F_1112)           = DISABLE_FLR;
-        b_LdTmpBufRam(F_1213)           = DISABLE_FLR;
-        b_LdTmpBufRam(F_1314)           = DISABLE_FLR;
-        b_LdTmpBufRam(F_1415)           = DISABLE_FLR;
-        b_LdTmpBufRam(F_1516)           = DISABLE_FLR;
-        b_LdTmpBufRam(F_1617)           = DISABLE_FLR;
-        b_LdTmpBufRam(F_1718)           = DISABLE_FLR;
-        b_LdTmpBufRam(F_1819)           = DISABLE_FLR;
-        b_LdTmpBufRam(F_1920)           = DISABLE_FLR;
-        b_LdTmpBufRam(F_2021)           = DISABLE_FLR;
-        b_LdTmpBufRam(F_2105)           = DISABLE_FLR;
-        b_LdTmpBufRam(F_0002)           = DISABLE_FLR;
-        b_LdTmpBufRam(F_0003)           = DISABLE_FLR;
-        b_LdTmpBufRam(F_0004)           = DISABLE_FLR;
-        b_LdTmpBufRam(F_0005)           = DISABLE_FLR;
-        b_LdTmpBufRam(F_0006)           = DISABLE_FLR;
-        b_LdTmpBufRam(F_0007)           = DISABLE_FLR;
-        b_LdTmpBufRam(F_0008)           = DISABLE_FLR;
-        b_LdTmpBufRam(F_0009)           = DISABLE_FLR;
-        b_LdTmpBufRam(F_0010)           = DISABLE_FLR;
-        b_LdTmpBufRam(F_0011)           = DISABLE_FLR;
-        b_LdTmpBufRam(F_0012)           = DISABLE_FLR;
-        b_LdTmpBufRam(F_0013)           = DISABLE_FLR;
-        b_LdTmpBufRam(F_0014)           = DISABLE_FLR;
-        b_LdTmpBufRam(F_ParkingStart)   = Init_ParkingStartTime;
-        b_LdTmpBufRam(F_ParkingEnd)     = Init_ParkingEndTime;
-*/
 
         flash_write_DspChar(F_BLOCK3);
 //////////////////////////////////////////////////////////////
@@ -1512,19 +1475,6 @@ UserDataType  __attribute__((section(".usercode"))) ReadInitSetupData(void)
     }
 
 
-/*
-   	if(cF_USERLAMP1 > USER_LAMP_SORT ){
-        LadderBuf[C_SAVE_DATA]=0;
-		SaveVerify = 0x55;
-        F_SetupData_ReSet(F_UserLamp1,1);
-    }
-
-   	if(cF_USERLAMP2 > USER_LAMP_SORT ){
-        LadderBuf[C_SAVE_DATA]=1;
-		SaveVerify = 0x55;
-        F_SetupData_ReSet(F_UserLamp2,1);
-    }
-*/
 
 
 	SaveVerify = 0x0;
@@ -1534,22 +1484,6 @@ UserDataType  __attribute__((section(".usercode"))) ReadInitSetupData(void)
 
 
 
-/*
-
-UserDataType  __attribute__((section(".usercode"))) TotalUseTime(void)
-{
-    LocalType i;
-
-    if((UseBaseTime != sRamDArry[Hour])){
-//    if((UseBaseTime != sRamDArry[sec])){
-        if(PowerOnTime < 65534) PowerOnTime++;
-         UseBaseTime = sRamDArry[Hour];
-    }
-
-    return(0);
-}
-
-*/
 
 
 
@@ -1574,6 +1508,8 @@ void    __attribute__((section(".usercode"))) HextoASCIIByte(void)
 
 void  __attribute__((section(".usercode"))) WhyStop(void)
 {
+
+
 	if(bInspect){
         sRamDArry[mSysStatus]=sINSPECT;      
 	}
@@ -1648,14 +1584,6 @@ void  __attribute__((section(".usercode"))) WhyStop(void)
 		sRamDArry[mSysStatus] = sLULD_NO_OFF;                         
 	}
 
-/*   
-	else if(bsLuLdHome){
-		if(sRamDArry[mSysStatus] > sLULD_HOME) sRamDArry[mSysStatus] = sLULD_HOME;                        
-	}
-*/
-   
-
-
 	else if(bMotor_Overheat){
 		if(sRamDArry[mSysStatus] > sMOTOR_OVERHEAT)   
 		sRamDArry[mSysStatus]=sMOTOR_OVERHEAT;      
@@ -1708,6 +1636,10 @@ void  __attribute__((section(".usercode"))) WhyStop(void)
 		sRamDArry[mSysStatus]=(sLuOrLdErr0 + LuLdErrNm-1);        
 	}   
 
+	else if(bsEarthquake){
+		if(sRamDArry[mSysStatus] >= sEarthquake)   
+		sRamDArry[mSysStatus]=sEarthquake;        
+	}   
 
 	else if(NoStart){
 		switch(NoStart){		
@@ -1735,6 +1667,7 @@ void  __attribute__((section(".usercode"))) WhyStop(void)
 	}
 
     SegError=sRamDArry[mSysStatus];
+
 }
 
 
@@ -1971,6 +1904,13 @@ UserDataType  __attribute__((section(".usercode"))) ErrSave(void)
    	}
 
 
+   	if(bsEarthquake){							//36
+      	if(!bBefbsEarthquake){
+			SaveEebuf(sEarthquake);
+        	bBefbsEarthquake=bsEarthquake;
+      	}        
+   	}
+
     return(0);		
 }
 
@@ -2031,765 +1971,8 @@ void  __attribute__((section(".usercode"))) SystemErrSave(void)
 }
 
 
-/*
-UserDataType  __attribute__((section(".usercode"))) BitValue(UserDataType temp1)
-{
-   switch(temp1){
-      case  0:
-         temp1=0x01;
-         break;
-      case  1:
-         temp1=0x02;
-         break;
-      case  2:
-         temp1=0x04;
-         break;
-      case  3:
-         temp1=0x08;
-         break;
-      case  4:
-         temp1=0x10;
-         break;
-      case  5:
-         temp1=0x20;
-         break;
-      case  6:
-         temp1=0x40;
-         break;
-      case  7:
-         temp1=0x80;
-         break;
-   }
-	return(temp1);
-}
-*/
 
-/*
-#ifndef	RS485_FOR_CRT
 
-UserDataType  __attribute__((section(".usercode"))) OnceSaveErrorSet(UserDataType set)
-{
-
-   LocalType  temp,temp1,temp3;
-   
-   temp=ErrBdNamePt/8;
-   temp1=ErrBdNamePt%8;      
-   
-	temp3=0x01;
-	temp1=(temp3 << temp1);
-
-   
-   if(set==2){
-      if(Olderrbd[temp] & temp1) return(1);         
-      else                       return(0);         
-   }
-   else if(set==1){
-      Olderrbd[temp]=(UserDataType)(Olderrbd[temp] | temp1);         
-   }
-   else{
-      Olderrbd[temp]=(UserDataType)(Olderrbd[temp] & ~temp1);          
-   }
-
-   return(2);     
-}
-
-
-
-
-void  __attribute__((section(".usercode"))) ErrorSet(void)
-{
-   LocalType  temp,temp1,temp2,temp3;
-   
-
-   temp=ErrBdNamePt;
-   ErrBdNamePt=BDid[CurRcvAdr];
-   OnceSaveErrorSet(0);
-   ErrBdNamePt=temp;
-      
-   for(temp2=BefRcvAdr;temp2+1 < CurRcvAdr;temp2++){
-      	temp=temp2/8;
-      	temp1=temp2%8;      
-
-		temp3=0x01;
-		temp1=(temp3 << temp1);
-		
-      	errbd[temp]=errbd[temp] | temp1;         
-   }         
-}
-
-
-
-void  __attribute__((section(".usercode"))) ErrorBoardSet(void)  
-{
-   LocalType   vtemp,vtemp1,vtemp2,vtemp3,vtemp4;
-   
-      if(errtime>ERR_DSP_TIME){
-            ErrBdNamePt=0;
-            errtime=0;
-
-            vtemp4=errpt;
-            do{
-               errpt=(errpt+1)% ABS_ADDRESS;
-               vtemp=errpt/8;
-               vtemp1=errpt%8;
-               vtemp3=errbd[vtemp];         
-               vtemp2=0x01;
-               vtemp2=vtemp2<<vtemp1;          
-            }while(!(vtemp2 & vtemp3) && (vtemp4 != errpt) );
-      
-            if(vtemp2 & vtemp3){
-               errbd[vtemp]=errbd[vtemp] & (~vtemp2);         
-               vtemp=errpt+1;  
-               ErrBdNamePt=BDid[vtemp];
-               BdErrCntSeq[ErrBdNamePt]++; 
-            }            
-      }            
-}
-
-      
-
-
-
-
-
-
-void    __attribute__((section(".usercode"))) Com0COMM(UserDataType Absadr,UserDataType Logadr,UserDataType cmd)
-{
-   RxBuffer[0]=(UserDataType)ENQ;
-   
-   src=cF_COMPANY;
-   HextoASCIIByte();
-   RxBuffer[1]=firstdata;            
-   RxBuffer[2]=seconddata;            
-
-   src=Logadr;
-   HextoASCIIByte();
-   RxBuffer[3]=firstdata;   
-   RxBuffer[4]=seconddata;   
-
-   src=Absadr;
-   HextoASCIIByte();
-   RxBuffer[5]=firstdata;   
-   RxBuffer[6]=seconddata;               
-   
-   src=cmd;
-   HextoASCIIByte();
-   RxBuffer[7]=firstdata;            
-   RxBuffer[8]=seconddata;               
-}
-
-
-
-void    __attribute__((section(".usercode"))) MyDataTx(void)
-{         
-	LocalType  i,k;
-
-    
-	Com0COMM(MAS_A,LOG_ADR,NORMAL);
-
-    RxBuffer[0] = ACK;
-
-	src=0;
-	HextoASCIIByte();
-	RxBuffer[9]=firstdata;            
-	RxBuffer[10]=seconddata;            
-
-	src=0;
-	HextoASCIIByte();
-	RxBuffer[11]=firstdata;   
-	RxBuffer[12]=seconddata;               
-   
-	src=0;
-	HextoASCIIByte();
-	RxBuffer[13]=firstdata;            
-	RxBuffer[14]=seconddata;            
-
-	k=17;   
-   
-	for(i=S0_FLOOR; i < mcurfloor ; i++ ){
-		src=sRamDArry[i];
-		HextoASCIIByte();
-		RxBuffer[ k + 0]=firstdata;   
-		RxBuffer[ k + 1]=seconddata;
-		k=k+2;   
-	}
-
-	src= (k-17)/2;
-	HextoASCIIByte();   
-	RxBuffer[15]=firstdata;
-	RxBuffer[16]=seconddata;
-
-	RxBuffer[k+0]=(UserDataType)ETX;
-	RxBuffer[k+1]=0;
-      
-
-	TXEN=0;  
-	Serial();
-}
-
-#endif
-*/
-
-
-
-
-
-/*
-void    Com0COMM(UserDataType Absadr,UserDataType Logadr,UserDataType cmd)
-{
-   RxBuffer[0]=(UserDataType)ENQ;
-   
-   src=GROUP_ID;
-   HextoASCIIByte();
-   RxBuffer[1]=firstdata;            
-   RxBuffer[2]=seconddata;            
-
-   src=Logadr;
-   HextoASCIIByte();
-   RxBuffer[3]=firstdata;   
-   RxBuffer[4]=seconddata;   
-
-   src=Absadr;
-   HextoASCIIByte();
-   RxBuffer[5]=firstdata;   
-   RxBuffer[6]=seconddata;               
-   
-   src=cmd;
-   HextoASCIIByte();
-   RxBuffer[7]=firstdata;            
-   RxBuffer[8]=seconddata;               
-}
-*/
-
-
-
-/*
-void    __attribute__((section(".usercode"))) LdDataTx(void)
-{
-         
-    unsigned int count;
-    unsigned int chun,bek,sip,il;
-    unsigned long tmpcalu;
-
-
-    chun=(unsigned int)CurMeterPerMin;
-
-    il=(chun%10);
-
-    sip=(chun/10);
-    sip=(sip%10);
-
-    bek=(chun/100);
-    bek=(bek%10);
-
-    chun=chun/1000;
-    chun=(chun%10);
-                
-
-    RxBuffer2[0]  = ACK;
-    RxBuffer2[1]  = COMPANY;
-
-    RxBuffer2[2]  = ' ';
-    RxBuffer2[3]  = ' ';
-    RxBuffer2[4]  = ' ';
-    RxBuffer2[5]  = 'F';                            //1
-    RxBuffer2[6]  = 'l';                            //2
-    RxBuffer2[7]  = 'r';                            //3
-    RxBuffer2[8]  = ' ';                            //4
-	RxBuffer2[9]  = sRamDArry[DSP1];                //5
-	RxBuffer2[10] = sRamDArry[DSP2];                //6
-	RxBuffer2[11] = ' ';                            //7
-	RxBuffer2[12] = ' ';                            //8
-	RxBuffer2[13] = ' ';                            //9
-	RxBuffer2[14] = ' ';                            //10
-	RxBuffer2[15] = ' ';                            //11
-	RxBuffer2[16] = chun + '0';                     //12
-	RxBuffer2[17] = bek  + '0';                      //13 
-	RxBuffer2[18] = sip  + '0';                      //14
-	RxBuffer2[19] = '.';                            //15 
-	RxBuffer2[20] = il   + '0';                       //16
-
-    RxBuffer2[21] = ' ';
-    RxBuffer2[22] = 'C';                     //1
-    RxBuffer2[23] = 'o';                     //2
-    RxBuffer2[24] = 'u';                     //3
-    RxBuffer2[25] = 'n';                     //4
-	RxBuffer2[26] = 't';                     //5
-	RxBuffer2[27] = ' ';                     //6
-	RxBuffer2[28] = ' ';                     //7
-	RxBuffer2[29] = ' ';                     //8
-	RxBuffer2[30] = ' ';                     //9
-	RxBuffer2[31] = ' ';                     //10
-	RxBuffer2[32] = ' ';                     //11
-	RxBuffer2[33] = ' ';                     //12
-	RxBuffer2[34] = ' ';                     //13 
-	RxBuffer2[35] = ' ';                     //14
-	RxBuffer2[36] = ' ';                     //15 
-	RxBuffer2[37] = ' ';                     //16
-	RxBuffer2[38] = ' ';                     //
-	RxBuffer2[39] = ' ';                     //
-	RxBuffer2[40] = ' ';                     //
-
-	RxBuffer2[41]=ETX;
-	RxBuffer2[42]=0;
-
-
-//
-    count=eDArry[eMvCounter+1];   		
-    count=(count * 256);
-   		   		
-    count=count + eDArry[eMvCounter];   	
-   			
-
-    RxBuffer2[28]=(count/10000)+'0';
-    count=(count%10000);
-      	
-    RxBuffer2[29]=(count/1000)+'0';
-    count=(count%1000);
-      	
-    RxBuffer2[30]=(count/100)+'0';
-    count=(count%100);
-      	
-    RxBuffer2[31]=(count/10)+'0';
-    count=(count%10);
-      	      
-    RxBuffer2[32]=count +'0';
-
-
-	Serial2();
-
-}
-*/
-
-
-
-
-/*
-
-#ifndef	RS485_FOR_CRT	
-
-
-void    __attribute__((section(".usercode"))) Find_Absolute(UserDataType Absadr,UserDataType Logadr,UserDataType cmd)
-{                    
-	LocalType i,j,k;      
-
-	Com0COMM(Absadr,Logadr,cmd);  
-   
-    RxBuffer[0]=(UserDataType)ENQ;
-
-	src=LadderData[C_CMDTYPE];
-	HextoASCIIByte();
-	RxBuffer[9]=firstdata;            
-	RxBuffer[10]=seconddata;            
-
-	src=LadderData[C_BASE_MEMORY];
-	HextoASCIIByte();
-	RxBuffer[11]=firstdata;   
-	RxBuffer[12]=seconddata;               
-   
-	src=LadderData[C_OFFSET_MEMORY];
-	HextoASCIIByte();
-	RxBuffer[13]=firstdata;            
-	RxBuffer[14]=seconddata;            
-
-////////new
-    LadderData[C_DATA_CNT]=7;
-    src=(11 + LadderData[C_DATA_CNT]);
-    HextoASCIIByte();   
-    RxBuffer[15]=firstdata;
-    RxBuffer[16]=seconddata;
-    
-    j=17;
-    k=0;
-    for(i=0;i<(LadderData[C_DATA_CNT] + 10);i++){
-        if((New485Ladder[k+0] >= ' ') &&  (New485Ladder[k+0] < '0'))    (New485Ladder[k+0] = New485Ladder[k+0] + 0x80);    
-        if((New485Ladder[k+1] >= ' ') &&  (New485Ladder[k+1] < '0'))    (New485Ladder[k+1] = New485Ladder[k+1] + 0x80);    
-        RxBuffer[j+0]=New485Ladder[k+0];
-        RxBuffer[j+1]=New485Ladder[k+1];
-        k=k+2;
-        j=j+2;
-    }        
-	RxBuffer[j+0]=(UserDataType)ETX;
-	RxBuffer[j+1]=0;      
-	TXEN=0;
-	Serial();
-}
-*/
-
-
-
-
-/*
-void  __attribute__((section(".usercode"))) FlashDataRdWr(void)
-{
-    LocalType j;
-
-    if(LadderBuf[C_CMD] == READ_DATA){
-        for(j=0;j < LadderBuf[C_DATA_CNT];j++){   
-            LadderBuf[C_SAVE_DATA + j] =    cF_FLRDATARD((unsigned long)(LadderBuf[C_OFFSET_MEMORY] + j)); 
-        }
-    }   
-
-    if(LadderBuf[C_CMD] == WRITE_DATA){
-        F_SetupData_ReSet(LadderBuf[C_OFFSET_MEMORY],LadderBuf[C_DATA_CNT]);
-    }   
-
-    LadderBuf[C_CMDTYPE] = LadderBuf[C_CMDTYPE] + RET_GOOD;
-}
-
-
-
-
-
-
-
-
-
-
-
-void    __attribute__((section(".usercode"))) ReadEepDataOldType(void)
-{
-    LocalType i,j,data;
-
-    i=(unsigned int)(LadderBuf[C_OFFSET_MEMORY]);
-    for(j=0;j < LadderBuf[C_DATA_CNT];j++){
-        data=(UserDataType)EEPROM_Read_Byte(i);
-        eDArry[LadderBuf[C_OFFSET_MEMORY]+j] = (UserDataType)data;
-        LadderBuf[C_SAVE_DATA + j] = (UserDataType)data; 
-        i++;
-    }        
-}
-
-
-
-void    __attribute__((section(".usercode"))) WriteEepDataOldType(void)
-{
-    LocalType i,j;
-
-    i=(unsigned int)(LadderBuf[C_OFFSET_MEMORY]);
-    for(j=0;j < LadderBuf[C_DATA_CNT];j++){   
-        EEPROM_Write_Byte(i,LadderBuf[C_SAVE_DATA+j]);
-        eDArry[i]=LadderBuf[C_SAVE_DATA+j];	         		
-        i++;
-    }        
-}
-
-
-
-
-void  __attribute__((section(".usercode"))) EepDataRdWr(void)
-{
-       
-    if(LadderBuf[C_CMD] == READ_DATA){
-        if(LadderBuf[C_OFFSET_MEMORY] == O_eMvCounter){
-            LadderBuf[C_OFFSET_MEMORY] = eMvCounter;
-            ReadEepDataOldType();
-        }
-        else if((LadderBuf[C_OFFSET_MEMORY] >= O_eSysErCnt) &&  (LadderBuf[C_OFFSET_MEMORY] <= (O_eSysErCnt + 48))){  
-            LadderBuf[C_OFFSET_MEMORY] = LadderBuf[C_OFFSET_MEMORY] - O_eSysErCnt;
-            ReadEepDataOldType();
-        }
-        else{
-            FlashDataRd();
-        }
-        LadderBuf[C_CMDTYPE] = LadderBuf[C_CMDTYPE] + RET_GOOD;
-   }
-
-   else if(LadderBuf[C_CMD] == WRITE_DATA){
-        if(LadderBuf[C_OFFSET_MEMORY] == O_eMvCounter){
-            LadderBuf[C_OFFSET_MEMORY] = eMvCounter;
-            WriteEepDataOldType();
-        }
-        else if((LadderBuf[C_OFFSET_MEMORY] >= O_eSysErCnt) &&  (LadderBuf[C_OFFSET_MEMORY] <= (O_eSysErCnt + 48))){  
-             eDArry[eErrCntPt]=0;
-             sRamDArry[mBefErrCntPt]=0;                
-
-            LadderBuf[C_OFFSET_MEMORY] = LadderBuf[C_OFFSET_MEMORY] - O_eSysErCnt;
-            WriteEepDataOldType();
-        }
-        else{
-            FlashDataWr();
-        }
-
-        LadderBuf[C_CMDTYPE] = LadderBuf[C_CMDTYPE] + RET_GOOD;
-    }   
-}
-
-
-
-
-
-
-void  __attribute__((section(".usercode"))) EepRamDataRdWr(void)
-{
-    LocalType j;
-
-    if(LadderBuf[C_CMD] == READ_DATA){
-        if(LadderBuf[C_OFFSET_MEMORY] == O_eMvCounter){
-            LadderBuf[C_OFFSET_MEMORY] = eMvCounter;
-            for(j=0;j < LadderBuf[C_DATA_CNT];j++){   
-                LadderBuf[C_SAVE_DATA + j] = eDArry[LadderBuf[C_OFFSET_MEMORY]+j]; 
-            }   
-        }
-        else if((LadderBuf[C_OFFSET_MEMORY] >= O_eSysErCnt) &&  (LadderBuf[C_OFFSET_MEMORY] <= (O_eSysErCnt + 48))){  
-            LadderBuf[C_OFFSET_MEMORY] = LadderBuf[C_OFFSET_MEMORY] - O_eSysErCnt;
-            for(j=0;j < LadderBuf[C_DATA_CNT];j++){   
-                LadderBuf[C_SAVE_DATA + j] = eDArry[LadderBuf[C_OFFSET_MEMORY]+j]; 
-            }   
-        }
-        else{
-            FlashDataRd();
-        }
-
-        LadderBuf[C_CMDTYPE]= LadderBuf[C_CMDTYPE] + RET_GOOD;
-    }
-    else if(LadderBuf[C_CMD] == WRITE_DATA){
-//???????????????????????????????????????????????????
-//???????????????????????????????????????????????????
-//???????????????????????????????????????????????????
-//???????????????????????????????????????????????????
-        for(j=0;j < LadderBuf[C_DATA_CNT];j++){   
-            eDArry[LadderBuf[C_OFFSET_MEMORY]+j] = LadderBuf[C_SAVE_DATA+j];
-        }        
-        LadderBuf[C_CMDTYPE] = LadderBuf[C_CMDTYPE] + RET_GOOD;
-    }  
-}
-
-
-
-
-void  __attribute__((section(".usercode"))) Ram0DataRdWrLong(void)
-{   
-    unsigned long a;
-    unsigned int  i;
-
-	if(LadderBuf[C_CMDTYPE] == LONG_READ_DATA){         
-
-        if(LadderBuf[C_OFFSET_MEMORY] < SAVE_CUR_PULSE){
-            a = GET_LONG(LadderBuf[C_OFFSET_MEMORY]);
-        }
-        else{
-            a = CurPulse;
-        }
-
-
-        for(i=0;i<4;i++){ 
-            LadderBuf[C_SAVE_DATA + i] = (UserDataType)a;
-            a=a>>8;                        
-        }
-    
-        LadderBuf[C_CMDTYPE]= LadderBuf[C_CMDTYPE] + RET_GOOD;
-    }
-
-	else if(LadderBuf[C_CMDTYPE] == LONG_WR_DATA){         
-        F_SetupData_ReSet(LadderBuf[C_OFFSET_MEMORY],LadderBuf[C_DATA_CNT]);
-    }
-}
-*/
-
-
-
-
-
-/********************
-void  __attribute__((section(".usercode"))) Ram0DataRdWr(void)
-{
-   LocalType i,j,k;
-   
-   if((LadderBuf[C_CMD] == READ_DATA) || (LadderBuf[C_CMD] == BIT_READ_DATA)){
-      for(i=0;i < LadderBuf[C_DATA_CNT];i++){   
-         LadderBuf[C_SAVE_DATA + i] = sRamDArry[LadderBuf[C_OFFSET_MEMORY]+i];                        
-      }        
-      LadderBuf[C_CMDTYPE]= LadderBuf[C_CMDTYPE] + RET_GOOD;
-   }
-
-   else if(LadderBuf[C_CMD] == WRITE_DATA){
-      for(j=0;j < LadderBuf[C_DATA_CNT];j++){   
-         sRamDArry[LadderBuf[C_OFFSET_MEMORY]+j] = LadderBuf[C_SAVE_DATA+j];
-      }              
-      LadderBuf[C_CMDTYPE] = LadderBuf[C_CMDTYPE] + RET_GOOD;      
-   }  
-   else if(LadderBuf[C_CMD] == BIT_WRITE_DATA){
-      i=0;
-      for(j=1;j < LadderBuf[C_DATA_CNT];j++){
-         k=LadderBuf[C_SAVE_DATA+j];
-         if(k){   
-            sRamDArry[LadderBuf[C_BASE_MEMORY]+i] = (sRamDArry[LadderBuf[C_BASE_MEMORY]+i] | k);
-         }           
-         else{             
-            sRamDArry[LadderBuf[C_BASE_MEMORY]+i] = (sRamDArry[LadderBuf[C_BASE_MEMORY]+i] & ~LadderBuf[C_OFFSET_MEMORY]);
-         }           
-         i=i+LadderBuf[C_SAVE_DATA];
-      }        
-      LadderBuf[C_CMDTYPE] = LadderBuf[C_CMDTYPE] + RET_GOOD;
-   }  
-   
-   if(LadderBuf[C_OFFSET_MEMORY] == ExtCmdFlrONOFF0) ExtCmdFlrONOFFCnt=0;	
-}
-
-
-
-void  __attribute__((section(".usercode"))) VipCarKeyClr(void)
-{
-  if(S3_VIP1){
-    sRamDArry[mEqualFloor]=(sRamDArry[mEqualFloor] & ~UPDN_READY);
-    sRamDArry[mHighFloor] =(sRamDArry[mHighFloor] & ~UPDN_READY);
-    sRamDArry[mLowFloor]  =(sRamDArry[mLowFloor] & ~UPDN_READY);
-     
-    if(!(sRamDArry[mEqualFloor] & CAR_READY))  sRamDArry[mEqualFloor]=0;
-    if(!(sRamDArry[mHighFloor] & CAR_READY))  sRamDArry[mHighFloor]=0;	
-    if(!(sRamDArry[mLowFloor] & CAR_READY))   sRamDArry[mLowFloor]=0;
-  }
-}
-
-
-
-void  __attribute__((section(".usercode"))) SaveReceiveData(void)
-{	
-	LadderBuf[C_CMD]=RcvBuf[RCV_CMD];               
-   	LadderBuf[C_CMDTYPE]=RcvBuf[RCV_CMDTYPE];             
-	LadderBuf[C_BASE_MEMORY]=RcvBuf[RCV_BASE_ADR];              
-	LadderBuf[C_OFFSET_MEMORY]=RcvBuf[RCV_OFFS_ADR];          
-	LadderBuf[C_DATA_CNT]=RcvBuf[RCV_DATA_CNT];
-                        
-	LadderBuf[C_SAVE_DATA+0]=RcvBuf[RCV_DATA+0];             
-	LadderBuf[C_SAVE_DATA+1]=RcvBuf[RCV_DATA+1];             
-	LadderBuf[C_SAVE_DATA+2]=RcvBuf[RCV_DATA+2];             
-	LadderBuf[C_SAVE_DATA+3]=RcvBuf[RCV_DATA+3];             
-	LadderBuf[C_SAVE_DATA+4]=RcvBuf[RCV_DATA+4];                               
-
-
-
-	if(LadderBuf[C_CMDTYPE] == RW_SRAM0_AREA)           Ram0DataRdWr();         
-	else if(LadderBuf[C_CMDTYPE] == NEW_FLASH_RD_WR)    NewFlashData();  
-          
-    
-
-	if((RcvBuf[RCV_ABSADR] == A_LD) || (RcvBuf[RCV_ABSADR] == A_PC)){
-        if(RcvBuf[RCV_GROUP] == '0'){
-            bPasswardOk=1;
-            bAllMenu=1;
-			bCompanyCtl=1;
-            bUserOn=1;
-			bLoaderActive=1;
-        }        
-
-		if(RcvBuf[RCV_GROUP] == cF_COMPANY)	bLoaderActive=1;
-		
-		FhmLoaderTime=0;   	
-
-		LadderData[C_CMD]=LadderBuf[C_CMD];             
-		LadderData[C_CMDTYPE]=LadderBuf[C_CMDTYPE];              
-		LadderData[C_BASE_MEMORY]=LadderBuf[C_BASE_MEMORY];               
-		LadderData[C_OFFSET_MEMORY]=LadderBuf[C_OFFSET_MEMORY];              
-
-		LadderData[C_DATA_CNT]=LadderBuf[C_DATA_CNT];
-                        
-		LadderData[C_SAVE_DATA+0]=LadderBuf[C_SAVE_DATA+0];               
-		LadderData[C_SAVE_DATA+1]=LadderBuf[C_SAVE_DATA+1];               
-		LadderData[C_SAVE_DATA+2]=LadderBuf[C_SAVE_DATA+2];               
-		LadderData[C_SAVE_DATA+3]=LadderBuf[C_SAVE_DATA+3];               
-		LadderData[C_SAVE_DATA+4]=LadderBuf[C_SAVE_DATA+4];                                    
-	}
-
-     VipCarKeyClr();
-}
-
-
-
-
-void  __attribute__((section(".usercode"))) SerialCheck(void)
-{
-
-  LocalType tmp;     
-
-	if(ClrCnt > 20){
-	
-	  if(RxStatus==RX_GOOD){      
-	
-	    if((RcvBuf[RCV_CMD] == ADR_SET_REC) && (RcvBuf[RCV_LOGADR] == LogAddress+1) && (RcvBuf[RCV_ABSADR] == AbsAddress) ){                     
-	
-		  LadderData[C_CMDTYPE]=RcvBuf[RCV_CMDTYPE];
-	
-	      if(LogAddress < 99){
-	        for(tmp=0; tmp <= LogAddress;tmp++){
-	          if(RcvBuf[RCV_ABSADR] == BDid[tmp]){ 
-	            if(BdErrCntSeq[BDid[tmp]] > 5){                                                     
-	              Find_Absolute(RcvBuf[RCV_ABSADR],tmp,ADR_SET_ACK);
-	            }                     
-	            tmp=250;                     
-	          }                 
-	        }
-	
-	        if(tmp<250){
-	          LogAddress++;
-	          Find_Absolute(RcvBuf[RCV_ABSADR],LogAddress,ADR_SET_ACK);
-	          BDid[LogAddress]=RcvBuf[RCV_ABSADR];
-	
-	      	  if((RcvBuf[RCV_ABSADR] == A_CAR1) || (RcvBuf[RCV_ABSADR] == A_CAR1) || (RcvBuf[RCV_ABSADR] == A_CAR3) || (RcvBuf[RCV_ABSADR] == A_CAR4) ){
-	              bCarService=1;                            
-	          }
-	        }               
-	      }            
-	    }
-	    else{      
-	      if((RcvBuf[RCV_CMD] == NORMAL) || (RcvBuf[RCV_CMD] == NO_DATA)){
-	        BdErrCntSeq[RcvBuf[RCV_ABSADR]]=0;                 
-	      }                 
-	      else if( (RcvBuf[RCV_CMD] == WRITE_DATA) || (RcvBuf[RCV_CMD] == READ_DATA) || (RcvBuf[RCV_CMD] == LONG_READ_DATA) ||
-	               (RcvBuf[RCV_CMD] == BIT_WRITE_DATA) ||  (RcvBuf[RCV_CMD] == BIT_READ_DATA)){           
-	          if((RcvBuf[RCV_GROUP] == cF_COMPANY) || (RcvBuf[RCV_GROUP] == '0')){
-	            SaveReceiveData();
-	          }              
-	          BdErrCntSeq[RcvBuf[RCV_ABSADR]]=0;
-	      }            
-	         
-	      CurRcvAdr=RcvBuf[RCV_LOGADR];         
-	      ErrorSet();
-	      BefRcvAdr=CurRcvAdr;
-	      TimeOutBd=CurRcvAdr;         
-	      RxStatus=STX_CHK;                        	
-	    }
-	    
-	    SerialLoopMaxTime=0;      
-	    if(RxStatus == RX_GOOD)  RxStatus = STX_CHK;	
-	  }         
-	                           
-	  if(TimeOutBd > LogAddressLoop){
-	    if(!bFindBoard){          
-	      LogAddressLoop=LogAddressLoop+1;
-	      CurRcvAdr=LogAddressLoop;
-	      ErrorSet();
-	      AbsAddress++;
-	      if(AbsAddress>ABS_ADDRESS) AbsAddress=1;         
-	      Find_Absolute(AbsAddress,LogAddress+1,ADR_SET_SEND);
-	      bFindBoard=1;         
-	      ExtCmdFlrONOFFCnt++;
-	    }
-	    else{      	
-	      BefRcvAdr=0;
-	      CurRcvAdr=0;
-	      TimeOutBd=0;
-	      MyDataTx();
-	      LogAddressLoop=LogAddress;                  
-	      bFindBoard=0;                  
-	      disp_clk_regs();
-	    }                  
-	  }  
-	           
-	  ErrorBoardSet();
-	}
-	else{
-	  if(RxStatus == STX_CHK){
-	   		Find_Absolute(MAS_A,LOG_ADR,LOGADR_CLR);  
-	 		ClrCnt++;
-	  }	
-	}	              
-  return;
-}
-#endif
-
-*********/
 
 
 
@@ -4837,18 +4020,8 @@ unsigned int    __attribute__((section(".usercode")))   AutoParkingCheck(void)
 
 unsigned int    __attribute__((section(".usercode"))) ParkingValidCheck(void)
 {
-//	if(IN_PRK){
-
 	if(IN_PRK || bPC_PRK || bSlavePrk){
-
 		return(1);
-/*		
-        if(cF_ParkingStart == cF_ParkingEnd)    return(1);        
-        else{
-            if(AutoParkingCheck())              return(1);
-            else                                return(0);
-        }
-*/
     }
     else    return(0);
 }
@@ -4860,8 +4033,6 @@ void  __attribute__((section(".usercode"))) ParkingCheck(void)
 	S4_PARKING_READY1=0;
 
 	if(S3_PARKING1 && (ParkingValidCheck()) && !S2_FIRE1 && (!IN_LU || !IN_LD) ){      
-
-///////////////////////	if(S3_PARKING1 && (ParkingValidCheck() || bPC_PRK) && !S2_FIRE1 && (!IN_LU || !IN_LD) ){
 
 		if(sRamDArry[mSysStatus] >= sPARKING)   sRamDArry[mSysStatus]=sPARKING; 
             
@@ -4883,7 +4054,6 @@ void  __attribute__((section(".usercode"))) ParkingCheck(void)
        		sRamDArry[mDoorSeq] = DOOR_OPEN_START;      		         
             S3_PARKING1=0;
    		}
-
   	}
   	else if((ParkingValidCheck() || bPC_PRK) && bAuto && !S2_FIRE1 && (!IN_LU || !IN_LD) ){
    		if(sRamDArry[mcurfloor]== cF_PRKFLR){
@@ -4901,9 +4071,13 @@ void  __attribute__((section(".usercode"))) ParkingCheck(void)
   	}
   	else{
    		if(S3_PARKING1){
+			sRamDArry[mDoor]    = (sRamDArry[mDoor] & MAIN_SUB_OPEN_KEY_CLEAR);   
+			if(bSubSlavePrk)	sRamDArry[mDoor]=( sRamDArry[mDoor] | SUB_OPEN_KEY);                            
+			else				sRamDArry[mDoor]=( sRamDArry[mDoor] | MAIN_OPEN_KEY);                            
        		sRamDArry[mDoorSeq] = DOOR_OPEN_START;      		             
    		}    		
    		S3_PARKING1=0;
+		bSubSlavePrk=0;
   	}
 }
 
@@ -5329,7 +4503,7 @@ unsigned int    __attribute__((section(".usercode"))) Speed210Check(void)
     if(TotalPulse>MinPulse) return(0);
     else                    return(1);
 }
-*/
+
 
 
 unsigned int    __attribute__((section(".usercode"))) Speed180Check(void)
@@ -5344,6 +4518,7 @@ unsigned int    __attribute__((section(".usercode"))) Speed180Check(void)
     if(TotalPulse>MinPulse) return(0);
     else                    return(1);
 }
+*/
 
 
 unsigned int    __attribute__((section(".usercode"))) Speed150Check(void)
@@ -5548,6 +4723,7 @@ unsigned int  __attribute__((section(".usercode")))   SpeedChange(void)
             }
             break;     
         case    SPEED_180:
+/*
             if(!Speed180Check() && (CurSpeed < SPEED_180)){
                 CurSpeed=SPEED_180;
                 DecreasePulse=GET_LONG(DEC_PULSE_180);
@@ -5573,6 +4749,7 @@ unsigned int  __attribute__((section(".usercode")))   SpeedChange(void)
                 DecreasePulse=GET_LONG(DEC_PULSE_60);
                 ret=0;
             }
+*/
             break;     
         case    SPEED_210:
 /*
@@ -5938,6 +5115,7 @@ NoStart=0;
 */
                 break;     
             case    SPEED_180:
+/*
                 if(!Speed180Check()){
                     CurSpeed=SPEED_180;
                     DecreasePulse=GET_LONG(DEC_PULSE_180);
@@ -5966,6 +5144,7 @@ NoStart=0;
 				else	ret=4;
 
                 if((cF_SPEED60 == 0) && (cF_SPEED90 == 0) && (cF_SPEED120 == 0) && (cF_SPEED150 == 0)  && (cF_SPEED180 == 0))	ret=2;
+*/
         
                 ret=3;  //// not use
     
@@ -6729,7 +5908,8 @@ void __attribute__((section(".usercode")))  FhmRunCheck(void)
 {
 
     if( !bAuto && IN_AUTO && CounterCheck() && !ManWorkingChk){
-        if( ( (sRamDArry[FHM_RUN] == FHM_RUN_CMD) && (FhmLoaderTime < 10) ) || !IN_FHM){   
+//        if( ( (sRamDArry[FHM_RUN] == FHM_RUN_CMD) && (FhmLoaderTime < 10) ) || !IN_FHM){   
+        if( ( (sRamDArry[FHM_RUN] == FHM_RUN_CMD) && (FhmLoaderTime < 10) ) ){   
             bFhmRunReset=1;
             bFhmRun=1;
             if(sRamDArry[FHM_SEQ]==0){
@@ -6745,7 +5925,8 @@ void __attribute__((section(".usercode")))  FhmRunCheck(void)
 	}
 
 
-    if((bAuto) || ((sRamDArry[FHM_RUN] == 0) && IN_FHM) ){
+//    if((bAuto) || ((sRamDArry[FHM_RUN] == 0) && IN_FHM) ){
+    if((bAuto) || ((sRamDArry[FHM_RUN] == 0) ) ){
         bFhmRunReset=0;                
         bFhmRun=0;
     }
@@ -9402,7 +8583,8 @@ void    __attribute__((section(".usercode"))) WaterCheck(void)
 void  __attribute__((section(".usercode")))  InitialInPortChk(void)
 {
     if(WarmingUpTime < 100){
-        if(!IN_U_B || !IN_D_B  || !IN_FHM){
+//        if(!IN_U_B || !IN_D_B  || !IN_FHM){
+        if(!IN_U_B || !IN_D_B ){
             if(WarmingUpTime >= 80) WarmingUpTime=80;
 
             if(sRamDArry[mSysStatus] > sInPortError)   sRamDArry[mSysStatus]=sInPortError;      
@@ -9500,6 +8682,13 @@ void  __attribute__((section(".usercode")))  EtcStopSet(void)
     if( bAuto && bOneLuOrLd && !bMoveCar){
 		if(!IN_WATER || S1_POWER_FAIL || (sRamDArry[mDoor] & 0x10)){            
         	S3_STOP1=1;
+		}
+
+		if( bsEarthquake){
+        	S3_STOP1=1;
+			if(sRamDArry[mDoorSeq] > DOOR_REOPEN_CHECK){   		
+		  		sRamDArry[mDoorSeq]=DOOR_OPEN_START;
+			}
 		}
 
 		if( !(sRamDArry[mExtIN0] & 0x80)){
@@ -9682,6 +8871,23 @@ unsigned int  __attribute__((section(".usercode")))   HuntingChk(void)
 }
 
 
+unsigned int  __attribute__((section(".usercode")))   EarthquakeCheck(void)
+{
+
+	if(bAuto && !bManualStop && bSlaveEarthquake){
+		bExtButClr=1;
+   		bsEarthquake=1;
+
+        sRamDArry[mLowFloor]  = 0;
+        sRamDArry[mHighFloor] = 0;
+	}
+	else{
+   		bsEarthquake=0;
+		bBefbsEarthquake=0;	
+	}
+
+	return(0);
+}
 
 
 void  __attribute__((section(".usercode")))   InvErrChk(void)
@@ -9832,9 +9038,9 @@ unsigned int	__attribute__((section(".usercode")))	PcCmdchk(void)
 		}
 	}
 	
-	if(bExtButClr)	CrtMoveFlr=0;
+	if(bExtButClr)								CrtMoveFlr=0;
 	if( (CrtMoveFlr & ONLY_FLR) > cF_TOPFLR)	CrtMoveFlr=0;	
-	if( !(CrtMoveFlr & CAR_READY))	return(0);
+	if( !(CrtMoveFlr & CAR_READY))				return(0);
 
 
 	if( !bCarUpMove && !bCarDnMove){
@@ -9954,6 +9160,7 @@ void  __attribute__((section(".usercode")))   IO_Check(void)
     WaterCheck();
     SlipCheck();         
     OilTypeStopChk();         
+	EarthquakeCheck();
    	ButtonClrCheck();   
     WaitAndNotMoveChk();
 	CarKeyMostServiceCheck();
@@ -9965,7 +9172,6 @@ void  __attribute__((section(".usercode")))   IO_Check(void)
    	InvErrChk();
 	CheckFloorSensor();
 	HuntingChk();
-
     OUT_ERR(0);        
 
 /////////
@@ -10161,6 +9367,8 @@ void  __attribute__((section(".usercode")))   IO_Check(void)
     EmergencyCheck();
 
     PcCmdSaveChk();
+
+//  	ButtonClrCheck();   
 
 //////////////////////////	CarStopAndNotMoveCheck();
 //    InvErrChk();
@@ -10610,8 +9818,13 @@ int   __attribute__((section(".usercode"))) main(void)
 
     C1Loop=0;
     C2Loop=0;
-
+	bSlaveEarthquake=0;
    	bSlavePrk=0;
+	bSubSlavePrk=0;
+
+	bSlaveFire=0;
+	bSubSlaveFire=0;
+
     bPC_PRK=0;
     bPC_FIRE=0;
 	bPC_FAMILY=0;

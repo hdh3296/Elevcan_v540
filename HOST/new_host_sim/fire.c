@@ -54,22 +54,43 @@ void  __attribute__((section(".usercode")))   Fire(void)
             }
             else{
                 if(sRamDArry[mcurfloor] == FireBaseFloor){
+
+					sRamDArry[mDoor]    = (sRamDArry[mDoor] & MAIN_SUB_OPEN_KEY_CLEAR);   
+					if(bSubSlaveFire)	sRamDArry[mDoor]=( sRamDArry[mDoor] | SUB_OPEN_KEY);                            
+					else				sRamDArry[mDoor]=( sRamDArry[mDoor] | MAIN_OPEN_KEY);                            
+
+
                     if( (bOpenDoorOk || !bDoorCloseOk) && !IN_FR1){
                         sRamDArry[mFireSeq]=FIRE_ONE;                
                     }
                     else{
+						ValidDoorSel();
                         if(bOnLuLd && bDoorOpenEnd){
                           	ClrUpDnWard();       
                             bSubWayLight=1;                            
                             NextFloorTime=0;
 #ifndef	SAMSUNG_FIRE
              	        	if(sRamDArry[mDoorSeq] >= DOOR_REOPEN_CHECK){
-                		        sRamDArry[mDoorSeq]=DOOR_OPEN_START;
+								if(NewDoorSelect == MAIN_SUB_DOOR){
+									if( (CurDoorSelect == SUB_DOOR) && bSubSlaveFire){
+	                		        	sRamDArry[mDoorSeq]=DOOR_OPEN_START;
+									}
+								}
+								else{
+                		        	sRamDArry[mDoorSeq]=DOOR_OPEN_START;
+								}
                      		}
-
                         }
                         else if(bOnLuLd && (sRamDArry[mDoorSeq] > DOOR_OPEN_WAIT)){
-                            sRamDArry[mDoorSeq] = DOOR_OPEN_START;
+							if(NewDoorSelect == MAIN_SUB_DOOR){
+								if( (CurDoorSelect == SUB_DOOR) && bSubSlaveFire){
+                		        	sRamDArry[mDoorSeq]=DOOR_OPEN_START;
+								}
+							}
+							else{
+               		        	sRamDArry[mDoorSeq]=DOOR_OPEN_START;
+							}
+
 #endif
                         }
  
@@ -234,23 +255,19 @@ void  __attribute__((section(".usercode")))   Fire(void)
 void  __attribute__((section(".usercode")))     FireKeyCheck(void)
 {
    	if(bAuto){     	
-     	if(IN_FIRE && !bPC_FIRE && IN_FR1 && (!SubFireCheck())){
+     	if(IN_FIRE && !bPC_FIRE && IN_FR1 && !bSlaveFire && (!SubFireCheck())){
           sRamDArry[mFireSeq] = NO_FIRE;
-
-			S3_CUR_KEY1=0;
+		  S3_CUR_KEY1=0;
           S2_FIRE1=0;
           bSubWayLight=0;                            
         }
         else{
           if(sRamDArry[mSysStatus] > sFireOn)   sRamDArry[mSysStatus]=sFireOn;      
           if( !SubFireCheck())    				FireBaseFloor=cF_FIRESAFEFLR;
-/*    
-          if(SubFireCheck())    				FireBaseFloor=cF_X7SAFEFLR;    
-          else          						FireBaseFloor=cF_FIRESAFEFLR;
-*/
+
           S2_FIRE1=1;
           
-     	  if(!IN_FIRE || bPC_FIRE || (SubFireCheck())){
+     	  if(!IN_FIRE || bPC_FIRE || bSlaveFire || (SubFireCheck())){
             if(sRamDArry[mFireSeq]==NO_FIRE){
                 sRamDArry[mFireSeq]=FIRE_START;
             }
@@ -271,11 +288,13 @@ void  __attribute__((section(".usercode")))     FireKeyCheck(void)
     }
 
     else{
-      sRamDArry[mFireSeq] = NO_FIRE;
-      S3_CUR_KEY1=0;
-      S2_FIRE1=0;
-      bFR2Start1=0;
-      bSubWayLight=0;                            
+      	sRamDArry[mFireSeq] = NO_FIRE;
+      	S3_CUR_KEY1=0;
+      	S2_FIRE1=0;
+      	bFR2Start1=0;
+      	bSubWayLight=0;                   
+		bSlaveFire=0;
+		bSubSlaveFire=0;         
     }
 
 

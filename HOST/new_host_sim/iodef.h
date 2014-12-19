@@ -295,6 +295,7 @@ typedef  union  _long_union
 #define  sCarDoor_Jumper      33
 #define  sHoleDoor_Jumper     34
 #define  sCarHoleDoor_Jumper  35
+#define  sEarthquake  		  36
 
 /////////////////////////////////////
 #define  sFhmError            43
@@ -953,6 +954,7 @@ extern  UserDataType    StateBit2;
 extern	UserDataType    StateBit3;   
 extern	UserDataType    StateBit4;   
 extern	UserDataType    StateBit5;   
+extern	UserDataType    StateBit6;   
 
 extern  UserDataType    Vip_Floor;   
 
@@ -1268,6 +1270,17 @@ extern const unsigned int EncRate[];
 #define  bSafety_scrSft       	GET_BITFIELD(&StateBit5).bit5 
 #define  bRelevelErr		    GET_BITFIELD(&StateBit5).bit6 
 #define  bLevelOpen        		GET_BITFIELD(&StateBit5).bit7 
+
+
+
+#define  bsEarthquake      		GET_BITFIELD(&StateBit6).bit0 
+#define  bBefbsEarthquake      	GET_BITFIELD(&StateBit6).bit1 
+#define  bSlaveEarthquake    	GET_BITFIELD(&StateBit6).bit2 
+#define  bSubSlavePrk        	GET_BITFIELD(&StateBit6).bit3 
+#define  bSlaveFire         	GET_BITFIELD(&StateBit6).bit4 
+#define  bSubSlaveFire       	GET_BITFIELD(&StateBit6).bit5 
+#define  bNOT_USE6		    	GET_BITFIELD(&StateBit6).bit6 
+#define  bNOT_USE7        		GET_BITFIELD(&StateBit6).bit7 
 
 
 

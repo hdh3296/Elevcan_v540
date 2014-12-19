@@ -9,21 +9,6 @@
 #include "serial.h"
 
 
-
-    __CONFIG(1, (RETEN_OFF & INTOSCSEL_LOW & SOSCSEL_DIG & XINST_OFF & FOSC_HS1 & PLLCFG_ON & FCMEN_OFF & IESO_OFF  & 0xffff));                   
-    __CONFIG(2, (PWRTEN_ON & BOREN_SBORDIS & BOREN_ON & BORV_1 & BORPWR_LOW  & WDTEN_NOSLP & WDTPS_64 & 0xffff));         
-    __CONFIG(3, (CANMX_PORTB & MSSPMSK_MSK7 & MCLRE_ON   & 0xffff));                         // PORTB digital on RESET
-    __CONFIG(4, (STVREN_ON & BBSIZ_BB2K & 0xffff));    
-                                                                                // DEBUG disabled,
-                                                                                // XINST disabled
-                                                                                // LVP disabled
-                                                                                // STVREN enabled
-    __CONFIG(5, (CP0_OFF& CP1_OFF & CP2_OFF & CP3_OFF & CPB_OFF & CPD_OFF & 0xffff));                                          // code unprotect
-    __CONFIG(6, (WRT0_OFF & WRT1_OFF & WRT2_OFF & WRT3_OFF & WRTC_OFF & WRTB_OFF & WRTD_OFF & 0xffff));                                              // code unprotect
-    __CONFIG(7, (EBTR0_OFF & EBTR1_OFF & EBTR2_OFF & EBTR3_OFF & EBTRB_OFF & 0xffff));                                               // code unprotect
-
-
-/*
     __CONFIG(1, 0x0e09);          
     __CONFIG(2, 0x1019);         
     __CONFIG(3, 0x8100);                         
@@ -31,12 +16,12 @@
     __CONFIG(5, 0xc00f);                                          
     __CONFIG(6, 0xe00f);                                              
     __CONFIG(7, 0x400f);                                              
-*/
+
 
 #define	 MY_COMPANY		'A'
 
 
-#define	 KeyPORT	PORTB
+#define	 KeyPORT	PORTA
  
 #define  EEP_SAVE_CMD    0x28
 #define  EEP_READ_CMD    0x27
@@ -501,8 +486,6 @@ void main(void)
 	Init_Comms();
 	Timer0Init();
     ei();
-PEIE=1;
-TRISB=0xff;
 
    	RxStatus=STX_CHK;
 
@@ -592,26 +575,15 @@ void interrupt isr(void)
         TXIF=0;
 	}	
 
-	if(OERR1) {
-      	TXEN1=0;
-      	TXEN1=1;
-      	SPEN1=0;
-      	SPEN1=1;
-		CREN1=0;
-    }
 
-	if( !CREN1)	CREN1=1;
-
-/*
-	if(FERR1 || OERR1){
+	if(FERR || OERR){
 		RCREG=RCREG;
-		FERR1=0;
- 		OERR1=0;	
+		FERR=0;
+ 		OERR=0;	
 
 		RCSTA=0;	
 		RCSTA = (NINE_BITS | 0x90);
 	}
-*/
 }
 
 

@@ -672,24 +672,20 @@ LocalType  __attribute__((section(".usercode")))    ForceSettingSpeed(void)
 
     if(bAuto && bCarUpMove){
 		if(cF_ELEV_SPEED > cF_LIMIT_SPEED){ 
-//	        if((sRamDArry[DEST_FLR] & ONLY_FLR) >= cF_TOPFLR){
-				if( !UpForceSettingSpeed()){
-	    			if(CurSpeed > cF_LIMIT_SPEED){
-	                    bSetSpeedOn=1;                    
-	                }
-	            }
-//	        }
+			if( !UpForceSettingSpeed()){
+    			if(CurSpeed > cF_LIMIT_SPEED){
+                    bSetSpeedOn=1;                    
+                }
+            }
 		}            
     }
     else if(bAuto && bCarDnMove){
 		if(cF_ELEV_SPEED > cF_LIMIT_SPEED){ 
-//	        if((sRamDArry[DEST_FLR] & ONLY_FLR) == 0){
-				if( !DnForceSettingSpeed()){
-	    			if(CurSpeed > cF_LIMIT_SPEED){
-	                    bSetSpeedOn=1;                    
-	                }
-	            }
-//	        }
+			if( !DnForceSettingSpeed()){
+    			if(CurSpeed > cF_LIMIT_SPEED){
+                    bSetSpeedOn=1;                    
+                }
+            }
 		}            
     }
         

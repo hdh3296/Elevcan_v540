@@ -616,7 +616,6 @@ void    __attribute__((section(".usercode"))) HoleDoorCloseEndCheck(UserDataType
 	if(i==0){
       	if(movecar){
 			if( !bRunningOpenOn){
-//				if(!bRelevelErr)	bsHdsRunOff=1;
 				if( !bManualStop)	bsHdsRunOff=1;
 			}
         }
@@ -653,7 +652,6 @@ void    __attribute__((section(".usercode"))) CarDoorCloseEndCheck(UserDataType 
       	if(movecar){
 			if( !bRunningOpenOn){
 				if( !bManualStop)	bsCleRunOff=1;
-//				if( !bRelevelErr)	bsCleRunOff=1;
 			}	
         }
    		bCarDoorCloseEnd=0;

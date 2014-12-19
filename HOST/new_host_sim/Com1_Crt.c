@@ -606,8 +606,8 @@ LocalType __attribute__((section(".usercode"))) HostCommandAct_485(void)
 		CrtMoveFlr=(unsigned char)(RxBuffer[4] | CAR_READY);
     	NormalDataReturn_485();    
     }
-    else if((CAN2_Buf[2]    ==   (PC_COMMAND | CMD_EXT_CALL_SEV)) && (CAN2_Buf[3] == 0x00)){
-		sRamDArry[mCrtExtMoveFlr]=(unsigned char)(CAN2_Buf[4]);
+    else if((RxBuffer[2]    ==   (PC_COMMAND | CMD_EXT_CALL_SEV)) && (RxBuffer[3] == 0x00)){
+		sRamDArry[mCrtExtMoveFlr]=(unsigned char)(RxBuffer[4]);
 		ExtKeyCnt=3;
     	NormalDataReturn_485();    
     }
@@ -646,7 +646,7 @@ LocalType __attribute__((section(".usercode"))) HostWriteMyData_485(void)
 void  __attribute__((section(".usercode"))) CrtReqCheck(void)
 {
 	unsigned int i,j;
-	
+
 	if((RxStatus==RX_GOOD) && (SerialTime > 3)){
 	    Crc=0xffff;
 	    for(j=0;j<(RxBuffer[3]+4);j++){
