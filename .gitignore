@@ -24,7 +24,6 @@
 *.sdb
 *.sym
 funclist
-*.hex
 *.tmp
 *.IAB
 *.IAD
@@ -37,3 +36,4 @@ funclist
 *.PO
 *.PR
 *.cce
+*.hex

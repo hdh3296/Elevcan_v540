@@ -4,8 +4,8 @@
 
 
 
-#define		NEW_CAR			1
-//#define		NEW_HIB_HPI		1
+//#define		NEW_CAR			1
+#define		NEW_HIB_HPI		1
 //#define		NEW_ES15		1
 //#define		NEW_VOICE		1
 
