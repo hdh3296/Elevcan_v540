@@ -1,4 +1,5 @@
 
+unsigned    char  MyFlrAddress=0;        
 
 
 #include    <pic18.h>
@@ -108,6 +109,8 @@ unsigned    char  TwoDoorDrive;
 unsigned    char  CallMeAdr;
 
 
+unsigned    char  DoorOpCl;
+
 //unsigned    char  ClearCnt;
 //unsigned    char  BefHighFlr,BefLowFlr;
 
@@ -160,6 +163,7 @@ bit   bBefDoorOpen=0;
 bit   bBefK=0;
 
 
+
 #ifdef	CPU65K80
 bit		LIVE_LAMP=0;
 bit		WR_CLK=0;
@@ -173,6 +177,7 @@ unsigned char P2=0;
 
 unsigned char SyncButtonCheck(unsigned char src)
 {
+
 	unsigned char i;
 
    	if(RxEidBuffer & HOST_BOARD){
@@ -189,16 +194,10 @@ unsigned char SyncButtonCheck(unsigned char src)
 		}
 		else	return(0);
 	}
+
 }
 
 
-/*
-unsigned char  SyncButtonCheck(void)
-{
-	if(SrcAddress  == SelHostAdr)	return(1);
-	else							return(0);
-}
-*/
 
 
 
@@ -224,7 +223,7 @@ void    MyLampCheck(void)
     i=0;
     j=0;
     
-    if(SelHostAdr == ReceiveAdr){
+    if((SelHostAdr == ReceiveAdr) && (MyFlrAddress==0)){
     
         if(!SubDoorMainDoorCheck()){    
             i=(unsigned char)RxEidBuffer;
@@ -583,10 +582,10 @@ int KeyLoad(unsigned char id)
 
 
 
-    if(Fire || Vip){
+///    if(Fire || Vip){
+    if(Fire){
         j=(CarKey[0] | YourKey[0] | CarKey[1] | YourKey[1] | CarKey[2] | YourKey[2] | CarKey[3] | YourKey[3] | YourDoor | DoorKey);
         if((j==0)){
-//			if(ToggleKey[0] | ToggleKey[1] | ToggleKey[2] | ToggleKey[3]){
 			 	ToggleKey[0] = 0;
 			 	ToggleKey[1] = 0;
 			 	ToggleKey[2] = 0;
@@ -595,7 +594,6 @@ int KeyLoad(unsigned char id)
                 CanCmd=ALL_KEY_CLEAR;
                 CanKeyValue[1] = 0x0;
                 i=0;           
-//            }
         }
     }  
 
@@ -910,6 +908,7 @@ void    CarLampNormal(unsigned char id)
 
     Lamp(id);
 
+	DoorOpCl=RcvBuf[IdPt+mDoor];
 
 /////////////////////    if(SetupBit)    SetupMode();                      //3
 
@@ -1302,9 +1301,8 @@ void  SetKeyButton(void)
         CarKey[j]     = oldscan[j];   
       }         
    }
-
-
 		
+
 	if(Vip || BefVip){
 		if(Vip != BefVip){
 			if(!CarMove){		
@@ -1317,7 +1315,6 @@ void  SetKeyButton(void)
 			}
 		}	   		
 	}
-		
 
 /*
 	if(Vip){
@@ -1336,6 +1333,7 @@ void  SetKeyButton(void)
 	else{
 		BefVip=Vip;
 	}
+
 */
 
 /*
@@ -1382,8 +1380,6 @@ if(Auto && !CarMove){
 
 	bDoorOpenWaitOn=0;
 
-// 32 층  사용시 아래를 막음 
- 
 	if(Auto && Open && !CarMove){
 		if(newscan[3] & 0x80){
 			bDoorOpenWaitOn=1;
@@ -1391,14 +1387,7 @@ if(Auto && !CarMove){
 		}
 	}
 
-// 32 층  사용시 위를 막음
-
-
-
-
-
-
-
+//open wait
 
 
 /*
@@ -1435,8 +1424,9 @@ if(Auto && !CarMove){
 }
 
 
-void    CarUpDownKeyNormal(void)
+void    CarOpenCloseKey(void)
 {
+
 
    if(UpKeyBit || bDoorOpenWaitOn){
       if((UpButtonTime<BUT_CANLE_T) && (UpButtonTime > 0) ){
@@ -1481,7 +1471,45 @@ void    CarUpDownKeyNormal(void)
          OPEN_LAMP=1;
 	}
 
+}
+
+
+
+void    CarUpDownKeyNormal(void)
+{
+	unsigned char j;
+
+	if(MyFlrAddress==0){        
+		CarOpenCloseKey();
+	}
+	else{
+		if((CurFloor == MyFlrAddress) &&  !CarMove){
+			CarOpenCloseKey();
+		}
+		else{
+	      OPEN_LAMP=0;
+		  bRealOpenkey=0;	
+	      UpButtonTime=0;
+	      DoorKey=DoorKey & 0xfe;
+
+
+	      CLOSE_LAMP=0;
+	      DnButtonTime=0;
+	      DoorKey=DoorKey & 0xfd;
+
+		}
+	}
+
+	if(Vip){
+        j=(YourDoor | DoorKey);
+		if( ((j & 0x0a)== 0) && !CarMove && Open && ((DoorOpCl & 0x05) == 0)){
+			 bRealOpenkey=1;
+	         DoorKey=DoorKey | 0x01;
+		} 
+	} 
+
    SetKeyButton();
+
 }
 
 
@@ -1918,6 +1946,7 @@ void main(void)
         if(bIamXSubDoor)    CanKeyValue[7]=(CanKeyValue[7] |  SUB_DOOR_BIT);                
         else                CanKeyValue[7]=(CanKeyValue[7] & ~SUB_DOOR_BIT);                
                                 
+
         if(CanTxAct){
             if(!KeyLoad(SelHostAdr)){
                 CanKeyValue[2]=DoorKey;
@@ -2138,18 +2167,20 @@ void interrupt isr(void)
             SEL_ACT=1;   
         }
         
-        else if(a==3){   
-            tmp_buf=(CarKey[3] | YourKey[3]);
+        else if(a==3){
 
-// 32 층  사용시 아래를 막음 
+#ifdef	SHIP_USE
+            DATA_PORT=(CarKey[3]);
+#else   
+//            DATA_PORT=(CarKey[3] | YourKey[3]);
+            tmp_buf=(CarKey[3] | YourKey[3]);
 			tmp_buf=(tmp_buf & 0x1f);
+
 			if(UpMove)							tmp_buf=(tmp_buf | 0x20);	
 			if(DnMove)							tmp_buf=(tmp_buf | 0x40);	
 			if(bErrorCar )						tmp_buf=(tmp_buf | 0x80);	
-
-// 32 층  사용시 위를 막음 
-
 			DATA_PORT=tmp_buf;
+#endif
 
 
             SEL0=1;

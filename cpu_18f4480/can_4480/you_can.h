@@ -23,7 +23,7 @@
 extern  void    CANTxDLC(char MsgFlag,unsigned char DataCnt);
 extern  void    CAN_Init(void);
 extern  void    CanCheck(void);
-extern  void    CanInterrupt(void);
+extern  unsigned int      CanInterrupt(void);
 extern  void    CanTx0(void);
 extern  void    CanTx1(void);
 extern  void    CanLiveChk(void);

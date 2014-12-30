@@ -751,7 +751,7 @@ IPR3=0;
 
 
 
-void    CanInterrupt(void)
+unsigned int  CanInterrupt(void)
 {
     unsigned int i,j,hostnm;
     unsigned char *ptr;
@@ -862,7 +862,7 @@ void    CanInterrupt(void)
         RXB0IF=0;
         RXB0FUL=0;
     }    
-
+	return(0);
 }
 
 
