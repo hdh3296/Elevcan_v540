@@ -332,9 +332,9 @@ unsigned char   Lamp(unsigned char id)
 
 	//Segment not dispaly  	
     SEG_E=0;        	
-    SEG_F=0;       	 
-    SEG_G1=1;  //if CPU =1 output ... Es15 Bd CN2 G1 = Gnd(N24)      	 
-    SEG_G2=1;         
+    SEG_F=Fire;        	 
+    SEG_G1=OverLoad;       	 
+    SEG_G2=1; // 24V 전원 공급 용.       
 
 /*
 	DOOR_OPEN_LAMP= !Open;

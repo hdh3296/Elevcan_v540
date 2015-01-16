@@ -322,7 +322,7 @@
 		    #define  BCD2_LAMP      LATD1  //Y1
 		    #define  BCD3_LAMP      LATD2  //Y2
 		    #define  BCD4_LAMP      LATD3  //Y3	
-	#endif
+		#endif
 #endif
 
 //CAR
