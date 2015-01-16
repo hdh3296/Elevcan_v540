@@ -232,15 +232,15 @@ unsigned char   Lamp(unsigned char id)
 
 	switch(RcvBuf[IdPt])
 	{
-		case	1:
+		case	1: // 1Ãþ
+			BCD1_LAMP=0; // M0
+			BCD2_LAMP=0; // M1
+			BCD3_LAMP=0; // M2
+			BCD4_LAMP=0; // M3
+			break;
+		case	2: // 2Ãþ
 			BCD1_LAMP=1;
 			BCD2_LAMP=0;
-			BCD3_LAMP=0;
-			BCD4_LAMP=0;
-			break;
-		case	2:
-			BCD1_LAMP=0;
-			BCD2_LAMP=1;
 			BCD3_LAMP=0;
 			BCD4_LAMP=0;
 			break;
@@ -252,74 +252,80 @@ unsigned char   Lamp(unsigned char id)
 			break;
 		case	4:
 			BCD1_LAMP=0;
-			BCD2_LAMP=0;
-			BCD3_LAMP=1;
+			BCD2_LAMP=1;
+			BCD3_LAMP=0;
 			BCD4_LAMP=0;
 			break;
 		case	5:
-			BCD1_LAMP=1;
-			BCD2_LAMP=0;
+			BCD1_LAMP=0;
+			BCD2_LAMP=1;
 			BCD3_LAMP=1;
 			BCD4_LAMP=0;
 			break;
 		case	6:
-			BCD1_LAMP=0;
+			BCD1_LAMP=1;
 			BCD2_LAMP=1;
 			BCD3_LAMP=1;
 			BCD4_LAMP=0;
 			break;
 		case	7:
 			BCD1_LAMP=1;
-			BCD2_LAMP=1;
+			BCD2_LAMP=0;
 			BCD3_LAMP=1;
 			BCD4_LAMP=0;
 			break;
 		case	8:
 			BCD1_LAMP=0;
 			BCD2_LAMP=0;
-			BCD3_LAMP=0;
-			BCD4_LAMP=1;
+			BCD3_LAMP=1;
+			BCD4_LAMP=0;
 			break;
 		case	9:
-			BCD1_LAMP=1;
+			BCD1_LAMP=0;
 			BCD2_LAMP=0;
-			BCD3_LAMP=0;
+			BCD3_LAMP=1;
 			BCD4_LAMP=1;
 			break;
 		case	10:
-			BCD1_LAMP=0;
-			BCD2_LAMP=1;
-			BCD3_LAMP=0;
+			BCD1_LAMP=1;
+			BCD2_LAMP=0;
+			BCD3_LAMP=1;
 			BCD4_LAMP=1;
 			break;
 		case	11:
 			BCD1_LAMP=1;
 			BCD2_LAMP=1;
-			BCD3_LAMP=0;
+			BCD3_LAMP=1;
 			BCD4_LAMP=1;
 			break;
 		case	12:
 			BCD1_LAMP=0;
-			BCD2_LAMP=0;
+			BCD2_LAMP=1;
 			BCD3_LAMP=1;
 			BCD4_LAMP=1;
 			break;
 		case	13:
-			BCD1_LAMP=1;
-			BCD2_LAMP=0;
-			BCD3_LAMP=1;
+			BCD1_LAMP=0;
+			BCD2_LAMP=1;
+			BCD3_LAMP=0;
 			BCD4_LAMP=1;
 			break;
 		case	14:
-			BCD1_LAMP=0;
+			BCD1_LAMP=1;
 			BCD2_LAMP=1;
-			BCD3_LAMP=1;
+			BCD3_LAMP=0;
 			BCD4_LAMP=1;
 			break;
 		case	15:
 			BCD1_LAMP=1;
-			BCD2_LAMP=1;
-			BCD3_LAMP=1;
+			BCD2_LAMP=0;
+			BCD3_LAMP=0;
+			BCD4_LAMP=1;
+			break;
+		case	16:
+			BCD1_LAMP=0;
+			BCD2_LAMP=0;
+			BCD3_LAMP=0;
 			BCD4_LAMP=1;
 			break;
 	}	
