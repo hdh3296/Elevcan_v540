@@ -56,7 +56,7 @@
 
 
 
-#define __TYPE_DIRECT //BCD seting
+//#define __TYPE_DIRECT //BCD seting
 
 //#define __COUNT_CAR		1     
 //#define		ONE_DSP		1
