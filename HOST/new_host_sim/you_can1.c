@@ -515,7 +515,8 @@ unsigned int  __attribute__((section(".usercode")))  CarBoardDataReceive(void)
 
     seconddoor          =(UserDataType)((C1RX0B4 >> 8) & 0x00ff);
 
-    
+
+/*    
     if(S2_FIRE1){
         if(seconddoor & 0x01){
             if(SelMainCarTime < 10) return(0);
@@ -530,6 +531,7 @@ unsigned int  __attribute__((section(".usercode")))  CarBoardDataReceive(void)
         SelMainCarTime=10;
         SelSubCarTime =10;
     }
+*/
 
 
     sRamDArry[mCarOpCl] =(UserDataType)(C1RX0B2 & 0x00ff);

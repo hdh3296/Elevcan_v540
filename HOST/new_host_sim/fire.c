@@ -55,10 +55,11 @@ void  __attribute__((section(".usercode")))   Fire(void)
             else{
                 if(sRamDArry[mcurfloor] == FireBaseFloor){
 
+#ifndef	SAMSUNG_FIRE
 					sRamDArry[mDoor]    = (sRamDArry[mDoor] & MAIN_SUB_OPEN_KEY_CLEAR);   
 					if(bSubSlaveFire)	sRamDArry[mDoor]=( sRamDArry[mDoor] | SUB_OPEN_KEY);                            
 					else				sRamDArry[mDoor]=( sRamDArry[mDoor] | MAIN_OPEN_KEY);                            
-
+#endif
 
                     if( (bOpenDoorOk || !bDoorCloseOk) && !IN_FR1){
                         sRamDArry[mFireSeq]=FIRE_ONE;                

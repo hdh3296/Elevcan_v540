@@ -69,6 +69,7 @@ unsigned    char  YourKey0[4]={0,0,0,0};
 unsigned    char  YourKey1[4]={0,0,0,0};
 unsigned    char  YourKey2[4]={0,0,0,0};
 unsigned    char  YourKey3[4]={0,0,0,0};
+unsigned    char  OtherDoorKey[5];
 
 unsigned    char  TopFloor;
 unsigned    char  CurFloor;          /*current floor */
@@ -109,7 +110,7 @@ unsigned    char  TwoDoorDrive;
 unsigned    char  CallMeAdr;
 
 
-unsigned    char  DoorOpCl;
+//unsigned    char  DoorOpCl;
 
 //unsigned    char  ClearCnt;
 //unsigned    char  BefHighFlr,BefLowFlr;
@@ -138,6 +139,7 @@ bit   Auto;
 bit   Parking;
 bit   Vip;
 bit   BefVip;
+bit	  BefFire;
 bit   FloorChange;
 bit   ManualToggle;
 bit   FDsp;
@@ -162,6 +164,9 @@ bit   bDoorOpenWaitOn=0;
 bit   bBefDoorOpen=0;
 bit   bBefK=0;
 
+bit   bOneskeySet=0;
+bit   bDoorOpenMain=0;
+bit   bDoorOpenSub=0;
 
 
 #ifdef	CPU65K80
@@ -224,9 +229,9 @@ void    MyLampCheck(void)
     j=0;
     
     if((SelHostAdr == ReceiveAdr) && (MyFlrAddress==0)){
+        i=(unsigned char)RxEidBuffer;
     
         if(!SubDoorMainDoorCheck()){    
-            i=(unsigned char)RxEidBuffer;
         
             switch(i){
                 case    0x80:
@@ -271,6 +276,30 @@ void    MyLampCheck(void)
                 YourKey[3]=YourKey0[3] | YourKey1[3] | YourKey2[3] | YourKey3[3];                
             }
         }
+		else{
+            switch(i){
+                case    0x80:
+					OtherDoorKey[1]=EqualDataBuf[2];
+                    j=1;
+                    break;
+                case    0x81:
+					OtherDoorKey[2]=EqualDataBuf[2];
+                    j=1;
+                    break;
+                case    0x82:
+					OtherDoorKey[3]=EqualDataBuf[2];
+                    j=1;
+                    break;
+                case    0x83:
+					OtherDoorKey[4]=EqualDataBuf[2];
+                    j=1;
+                    break;
+            }
+        
+            if(j==1){    
+                OtherDoorKey[0]  = (OtherDoorKey[1]   | OtherDoorKey[2]   | OtherDoorKey[3]   | OtherDoorKey[4]);
+            }
+		}
     }
 
 }            
@@ -582,10 +611,10 @@ int KeyLoad(unsigned char id)
 
 
 
-///    if(Fire || Vip){
     if(Fire){
         j=(CarKey[0] | YourKey[0] | CarKey[1] | YourKey[1] | CarKey[2] | YourKey[2] | CarKey[3] | YourKey[3] | YourDoor | DoorKey);
-        if((j==0)){
+        if(j==0){
+			if(!bOneskeySet){
 			 	ToggleKey[0] = 0;
 			 	ToggleKey[1] = 0;
 			 	ToggleKey[2] = 0;
@@ -593,10 +622,14 @@ int KeyLoad(unsigned char id)
 
                 CanCmd=ALL_KEY_CLEAR;
                 CanKeyValue[1] = 0x0;
-                i=0;           
+                i=0; 
+				bOneskeySet=1;	          
+			}
         }
+		else{
+			bOneskeySet=0;
+		}
     }  
-
 
     return(i);
 }
@@ -908,12 +941,18 @@ void    CarLampNormal(unsigned char id)
 
     Lamp(id);
 
-	DoorOpCl=RcvBuf[IdPt+mDoor];
+//	DoorOpCl=RcvBuf[IdPt+mDoor];
 
 /////////////////////    if(SetupBit)    SetupMode();                      //3
 
     FloorCalu(id);
       
+
+	bDoorOpenSub=0;   
+	bDoorOpenMain=0;   
+    if((RcvBuf[IdPt+ S3_STATE] & S3_OPEN_SUB))  bDoorOpenSub=1;   
+    if(RcvBuf[IdPt + S1_STATE] & S1_OPEN)		bDoorOpenMain=1;   
+
     if( ((!bIamXSubDoor) && (RcvBuf[IdPt+1] & S1_OPEN)) || ((bIamXSubDoor==1) && (RcvBuf[IdPt+3] & S3_OPEN_SUB))){
     
        switch(CurFloor){
@@ -1311,10 +1350,47 @@ void  SetKeyButton(void)
 		        	ToggleKey[j]  = 0x0;
 		        	CarKey[j]     = 0x0;   
 		      	}      
+				CanKeyValue[1] = 0x0;
+				CanCmd=ALL_KEY_CLEAR;
+				BefVip=Vip;
+				i=0;           
+			}
+		}	   		
+	}
+
+
+/*
+	if(Vip || BefVip){
+		if(Vip != BefVip){
+			if(!CarMove){		
+		     	for(j=0;j<4;j++){      
+		        	ClrKey[j]     = 0x0;  
+		        	ToggleKey[j]  = 0x0;
+		        	CarKey[j]     = 0x0;   
+		      	}      
 				BefVip=Vip;
 			}
 		}	   		
 	}
+*/
+
+	if(Fire || BefFire){
+		if(Fire != BefFire){
+			if(!CarMove){		
+		     	for(j=0;j<4;j++){      
+		        	ClrKey[j]     = 0x0;  
+		        	ToggleKey[j]  = 0x0;
+		        	CarKey[j]     = 0x0;   
+		      	}      
+				CanKeyValue[1] = 0x0;
+				CanCmd=ALL_KEY_CLEAR;
+				BefFire=Fire;
+				bOneskeySet=0;
+				i=0;           
+			}
+		}	   		
+	}
+
 
 /*
 	if(Vip){
@@ -1500,6 +1576,17 @@ void    CarUpDownKeyNormal(void)
 		}
 	}
 
+
+	if(Vip){		
+		if( !bDoorOpenSub || !bDoorOpenMain)	OtherDoorKey[0]=0;   
+      	j=(YourDoor | DoorKey | OtherDoorKey[0]);
+		if( ((j & 0x0a)== 0) && !CarMove){
+			 bRealOpenkey=1;
+	         DoorKey=DoorKey | 0x01;
+		} 
+	} 
+
+/*
 	if(Vip){
         j=(YourDoor | DoorKey);
 		if( ((j & 0x0a)== 0) && !CarMove && Open && ((DoorOpCl & 0x05) == 0)){
@@ -1507,6 +1594,7 @@ void    CarUpDownKeyNormal(void)
 	         DoorKey=DoorKey | 0x01;
 		} 
 	} 
+*/
 
    SetKeyButton();
 
