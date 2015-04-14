@@ -324,19 +324,14 @@ unsigned char   Lamp(unsigned char id)
 			break;
 	}	
 
-	//Segment not dispaly  	
-    SEG_E=0;        	
-    SEG_F=0;       	 
-    SEG_G1=1;  //if CPU =1 output ... Es15 Bd CN2 G1 = Gnd(N24)      	 
-    SEG_G2=1;         
 
-/*
+
 	DOOR_OPEN_LAMP= !Open;
 	PARKING_LAMP= !Parking;
 	MANUAL_LAMP=  !Auto;
 	EMG_LAMP_B=   Emg;
 	EMG_LAMP  =   !Emg;
-*/
+
 #else
 
 

@@ -56,7 +56,7 @@
 
 
 
-//#define __TYPE_DIRECT //BCD seting
+//#define __TYPE_DIRECT
 
 //#define __COUNT_CAR		1     
 //#define		ONE_DSP		1
@@ -132,7 +132,7 @@
 
 
 
-//HIB,HPI
+
 #if defined(__TYPE_HIB_HPI)
 
     #define  __DSP_DOT
@@ -193,8 +193,6 @@
     #define  P25             LATF5
     #define  P26             LATF6
     #define  P27             LATF7
-	
-	//CPU4480
 #else
 
     #define  UP_KEY         RD0
@@ -234,7 +232,6 @@
     #define  P27             LATC7
 #endif;
 
-//Es15 
 #elif defined(__TYPE_ES15)
 #ifdef	CAN_IO
 	#define  IO_00         RD0
@@ -280,7 +277,30 @@
 	#define  IO_30         RA7
 	#define  IO_31         RA6
 #else
-		//normal
+	#if defined(__TYPE_DIRECT)
+	    #define  UP_KEY         RB0  
+	    #define  DN_KEY         RB0
+  	    
+	    #define  UP_KEY_LAMP    LATC6  
+	    #define  DN_KEY_LAMP    LATC6  	    
+	    #define  HALL_LAMP_UP   LATC6
+	    #define  HALL_LAMP_DN   LATC6
+	    #define  AUTO_LAMP      LATC6
+
+
+	    #define  BCD1_LAMP      LATE0  //Y0
+	    #define  BCD2_LAMP      LATE1  //Y1
+	    #define  BCD3_LAMP      LATE2  //Y2
+	    #define  BCD4_LAMP      LATC0  //Y3
+	    #define  UP_LAMP        LATC1  //Y4 
+	    #define  DN_LAMP        LATC2  //Y5
+	    #define  DOOR_OPEN_LAMP LATC3  //Y6
+	    #define  FULL_LAMP      LATD0  //Y7
+	    #define  PARKING_LAMP   LATD1  //Y8
+	    #define  MANUAL_LAMP    LATD2  //Y9
+	    #define  EMG_LAMP_B   	LATD3  //Y10
+	    #define  EMG_LAMP   	LATC4  //Y11
+	#else
 	    #define  NOT_KEY        RA5  
 	    #define  NOT_KEY1       RE2  //RC5
 	    #define  UP_KEY         RE1  //RC7
@@ -293,8 +313,8 @@
 	    #define  HALL_LAMP_UP   LATB0
 	    #define  HALL_LAMP_DN   LATB1
 	    #define  DN_LAMP        LATB4
-	    #define  AUTO_LAMP      LATB5 //User Lamp1 at Auto 
-	    #define  MANUAL_LAMP    LATB6 //User Lamp1 at Inspection
+	    #define  AUTO_LAMP      LATB5
+	    #define  MANUAL_LAMP    LATB6
 	    #define  FULL_LAMP      LATB7
 	    
 	    #define  P0             LATD  // 0000 0000 
@@ -316,20 +336,16 @@
 	    #define  SEG_c_S        LATC2 
 	    #define  SEG_e_S        LATC3 
 	    #define  SEG_n12        LATC4 
-		//BCD
-		#if defined(__TYPE_DIRECT)	
-		    #define  BCD1_LAMP      LATD0  //Y0
-		    #define  BCD2_LAMP      LATD1  //Y1
-		    #define  BCD3_LAMP      LATD2  //Y2
-		    #define  BCD4_LAMP      LATD3  //Y3	
+
 	#endif
+
 #endif
 
-//CAR
+
 #elif defined(__TYPE_CAR)
 
     #define  __DSP_DOT
-	//CPU65k80
+
 #ifdef	CPU65K80
     #define     DATA_PORT     LATD
     #define     IN_DATA_PORT  PORTD
@@ -371,7 +387,7 @@
 //    #define  HALL_LAMP_UP       RE2
 //    #define  HALL_LAMP_DN       RE2
 
-	//CPU4480
+
 #else
     #define     DATA_PORT     LATD
     #define     IN_DATA_PORT  PORTD
@@ -412,7 +428,7 @@
     #define  HALL_LAMP_UP       RE2
     #define  HALL_LAMP_DN       RE2
 #endif
-//etc
+
 #else
     #error   "Type Not Define"
 

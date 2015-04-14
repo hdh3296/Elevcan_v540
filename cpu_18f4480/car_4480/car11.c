@@ -1456,6 +1456,7 @@ if(Auto && !CarMove){
 
 	bDoorOpenWaitOn=0;
 
+
 	if(Auto && Open && !CarMove){
 		if(newscan[3] & 0x80){
 			bDoorOpenWaitOn=1;
@@ -1580,7 +1581,7 @@ void    CarUpDownKeyNormal(void)
 	if(Vip){		
 		if( !bDoorOpenSub || !bDoorOpenMain)	OtherDoorKey[0]=0;   
       	j=(YourDoor | DoorKey | OtherDoorKey[0]);
-		if( ((j & 0x0a)== 0) && !CarMove){
+		if( ((j & 0x0a)== 0) && !CarMove && Open){
 			 bRealOpenkey=1;
 	         DoorKey=DoorKey | 0x01;
 		} 
@@ -2261,6 +2262,7 @@ void interrupt isr(void)
             DATA_PORT=(CarKey[3]);
 #else   
 //            DATA_PORT=(CarKey[3] | YourKey[3]);
+
             tmp_buf=(CarKey[3] | YourKey[3]);
 			tmp_buf=(tmp_buf & 0x1f);
 
@@ -2268,6 +2270,7 @@ void interrupt isr(void)
 			if(DnMove)							tmp_buf=(tmp_buf | 0x40);	
 			if(bErrorCar )						tmp_buf=(tmp_buf | 0x80);	
 			DATA_PORT=tmp_buf;
+
 #endif
 
 

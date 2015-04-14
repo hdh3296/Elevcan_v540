@@ -35,6 +35,8 @@
 
 #define	 MY_COMPANY		'A'
 
+#define	 LOCK_TIMER		0
+
 
 #define	 KeyPORT	PORTB
  
@@ -133,10 +135,15 @@ volatile const unsigned char Block0[]=	{  0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,0,
 										   0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 										   0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 										   0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+
 										};
 
 	
 										
+volatile const unsigned char LockUnLock[]={0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};											
+
+
+
 unsigned char tmpram[16];
 far unsigned char * source_ptr = (far unsigned char *)tmpram;                    /*pointers to data*/
 far unsigned char * dest_ptr;
@@ -161,12 +168,18 @@ unsigned char  pt;
 unsigned char  VerPt;  
 
 unsigned int  main_timer;  
+unsigned int  min_timer=0;  
+unsigned int  save_timer=0;  
 
 
 bit   bKeyValid;
 bit   bKeyOn;
 
 
+bit   bTimeSave;
+bit   bTimeSaveValid=0;
+
+unsigned char  FirstKey=0;  
 
 //const   unsigned  char    Daesung[20]	={"<Daesung I.D.S> "};
 
@@ -218,6 +231,13 @@ void    HextoASCIIByte(void)
 
 int    SlaveTx(void)
 {
+/*
+	if(FirstKey==0){
+		CurKey='z';
+		FirstKey='z';
+	}
+*/
+
    RxBuffer[0]  = ACK;
    RxBuffer[1]  = MY_COMPANY;
    RxBuffer[2]  = CurKey;
@@ -442,10 +462,27 @@ unsigned int NewLadderChk(void)
 		ExportData(); 
 		return(1);   
 	}
-	
 	return(0);
 }
 
+
+
+unsigned int LoderLock(void)
+{
+	if( !bTimeSave)	return(0);
+	
+	if(save_timer == LOCK_TIMER)	save_timer++;	 				
+
+	tmpram[0] = (unsigned char)(save_timer >> 8);
+	tmpram[1] = (unsigned char)(save_timer);
+
+	dest_ptr =(far unsigned char *)(&LockUnLock[0]);
+	flash_write(source_ptr,size,dest_ptr);
+
+	bTimeSave=0;
+
+	return(0);
+}
 
 
 
@@ -495,6 +532,7 @@ unsigned int  NewDisplayLadder(void)
 void main(void)
 {
    	unsigned char  i;
+   	unsigned int   tmphigh,tmplow;
 	
 	di();
 	Initial();
@@ -527,13 +565,49 @@ TRISB=0xff;
     LCD_String_Out(0,0,&Message1[0]);
 
 
+	if( (MY_COMPANY == '0') && (LOCK_TIMER > 0) ){
+		tmphigh   =(unsigned int)(LockUnLock[0] << 8);
+		tmplow  =(unsigned int)(LockUnLock[1]);
+		save_timer=(tmphigh | tmplow);
+		bTimeSaveValid=1;
+	}
+	else{
+		save_timer=0;
+		bTimeSaveValid=0;
+	}
+
+	
+
     for(i=0;i<16;i++){
         Message1[i]=Wait[i];  
     }
-    Message1[14]=MY_COMPANY;  
+
+	if((save_timer > LOCK_TIMER) && (bTimeSaveValid)){ 				
+    	Message1[14]='?';  
+	}
+	else if(bTimeSaveValid){
+		tmphigh=(LOCK_TIMER-save_timer);
+ 		Message1[7]= (tmphigh/10000) + '0';
+			
+		tmphigh=(tmphigh % 10000);
+    	Message1[8]= (tmphigh/1000) + '0';
+
+		tmphigh=(tmphigh % 1000);
+    	Message1[9]= (tmphigh/100) + '0';
+
+		tmphigh=(tmphigh % 100);  
+    	Message1[10]= (tmphigh/10) + '0';
+
+    	Message1[11]= (tmphigh % 10) + '0';  
+
+		Message1[14]=MY_COMPANY;
+	}
+	else	Message1[14]=MY_COMPANY;
+
     Message1[16]=0x0;  
 	CLRWDT();
 	
+
     LCD_String_Out(0,1,&Message1[0]);     
 
    	LCD_Command(dON_cOFF_bOFF);
@@ -546,21 +620,36 @@ TRISB=0xff;
    
    	LcdTimer=0;
    	RxStatus=STX_CHK;
-   
+
+
+	min_timer=0;  
+    bTimeSave=0;
+
    while(1){
 		CLRWDT();
 
-      if(RxStatus==RX_GOOD){
-            RxStatus=STX_CHK;
+      	if(RxStatus==RX_GOOD){
+        	RxStatus=STX_CHK;
             NewDisplayLadder();   
             
-            if(bKeyValid){
+            if(bKeyValid){	
                SlaveTx();            
                bKeyValid=0;
                main_timer=0;                  
             }      
-      }
-      KeyCheck();		
+      	}
+
+
+
+		if(bTimeSaveValid){
+			if(save_timer <= LOCK_TIMER){ 				
+	      		KeyCheck();
+		  		LoderLock();
+			}
+		}
+		else{
+      		KeyCheck();
+		}
    }
 }
 
@@ -576,6 +665,17 @@ void interrupt isr(void)
 		SerialTime++;
 		LcdTimer++;           
 		if(Charter<150)   Charter++;
+
+		if(bTimeSaveValid){
+			min_timer++;
+			if(min_timer >= 60000){
+				min_timer=0;
+				if(save_timer < 0xfffe){
+					save_timer++;
+					bTimeSave=1;
+				}
+			}
+		}
 			
 		main_timer++;    
 	}
@@ -592,16 +692,6 @@ void interrupt isr(void)
         TXIF=0;
 	}	
 
-	if(OERR1) {
-      	TXEN1=0;
-      	TXEN1=1;
-      	SPEN1=0;
-      	SPEN1=1;
-		CREN1=0;
-    }
-
-	if( !CREN1)	CREN1=1;
-
 /*
 	if(FERR1 || OERR1){
 		RCREG=RCREG;
@@ -612,6 +702,17 @@ void interrupt isr(void)
 		RCSTA = (NINE_BITS | 0x90);
 	}
 */
+
+	if(OERR1) {
+      	TXEN1=0;
+      	TXEN1=1;
+      	SPEN1=0;
+      	SPEN1=1;
+		CREN1=0;
+    }
+
+	if( !CREN1)	CREN1=1;
+
 }
 
 
