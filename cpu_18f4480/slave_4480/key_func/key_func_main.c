@@ -86,6 +86,9 @@ unsigned    char  CommonDnKey[4];
 unsigned    char  CommonCarKey[4];
 
 
+unsigned    char  CommonXUpKey[4];
+unsigned    char  CommonXDnKey[4];
+
 
 bit   HostCallMe;
 bit   UpMove;
@@ -276,7 +279,15 @@ void    CommonKeyLoad(void)
 		Up_Key_Valid=1;
 		UP_KEY_LAMP=1;
 		UpButtonTime=10;
+		if( !(CommonXUpKey[i] & bitval)){
+			CommonXUpKey[i]=(CommonXUpKey[i] | bitval);
+			Tx1ConfirmCnt=3;
+		}
 	}	
+	else{
+		CommonXUpKey[i]=(CommonXUpKey[i] & ~bitval);
+	}
+
 
 	DN_KEY_LAMP=0;
 	Dn_Key_Valid=0;
@@ -286,6 +297,14 @@ void    CommonKeyLoad(void)
 		Dn_Key_Valid=1;
 		DN_KEY_LAMP=1;
 		DnButtonTime=10;
+
+		if( !(CommonXDnKey[i] & bitval)){
+			CommonXDnKey[i]=(CommonXDnKey[i] | bitval);
+			Tx0ConfirmCnt=3;
+		}
+	}
+	else{
+		CommonXDnKey[i]=(CommonXDnKey[i] & ~bitval);
 	}
 
 
