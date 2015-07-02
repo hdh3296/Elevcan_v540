@@ -669,7 +669,8 @@ UserDataType	__attribute__((section(".usercode"))) OpenCloseSet(void)
 {
 
 
-    if(bDoorCloseOk && (sRamDArry[mDoorSeq] >= DOOR_CLOSE_END)){
+    //if(bDoorCloseOk && (sRamDArry[mDoorSeq] >= DOOR_CLOSE_END)){
+	if(bDoorCloseOk){
 //    if(bDoorCloseOk){
         S1_OPEN1=0; 
         S3_OPEN_SUB1=0;
