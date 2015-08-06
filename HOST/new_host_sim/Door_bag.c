@@ -668,10 +668,11 @@ void    __attribute__((section(".usercode"))) CarDoorCloseEndCheck(UserDataType 
 UserDataType	__attribute__((section(".usercode"))) OpenCloseSet(void)
 {
 
-
-    //if(bDoorCloseOk && (sRamDArry[mDoorSeq] >= DOOR_CLOSE_END)){
+#ifdef	TEST_SIMULATION
+    if(bDoorCloseOk && (sRamDArry[mDoorSeq] >= DOOR_CLOSE_END)){
+#else
 	if(bDoorCloseOk){
-//    if(bDoorCloseOk){
+#endif
         S1_OPEN1=0; 
         S3_OPEN_SUB1=0;
         S1_CLOSE1=1;
