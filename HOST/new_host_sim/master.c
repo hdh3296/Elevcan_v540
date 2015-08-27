@@ -3371,7 +3371,6 @@ unsigned int __attribute__((section(".usercode")))  OneDoorSenserNoCloseChk(void
 
 unsigned int __attribute__((section(".usercode")))  OneDoorSenserCloseChk(void)
 {
-
 	DoorJumperNm=0;
 
     if(CarDoor1UseChk){
@@ -6333,6 +6332,7 @@ unsigned int __attribute__((section(".usercode")))  CheckFloorSensor(void)
 						bFlrMatchChk=1;
 	                }                    
 	                break;
+/*
 	            case    7:
 	                if((IN_X6 || IN_X0) || !IN_X1 || !IN_X2 || !IN_X3 || !IN_X4 || !IN_X5){ 
 						bFlrMatchChk=1;
@@ -6363,7 +6363,7 @@ unsigned int __attribute__((section(".usercode")))  CheckFloorSensor(void)
 						bFlrMatchChk=1;
 	                }                    
 	                break;
-	
+	*/
 	            default:
 						bFlrMatchChk=1;
 	                break;        
@@ -6667,6 +6667,45 @@ void __attribute__((section(".usercode")))  DoorOpenCloseSeq(void)
     }
 
 
+#ifndef  TEST_SIMULATION  
+	if( !(!IN_FR1 && !IN_FR2) && DoorJumperChkOnOffChk){
+	    if((sRamDArry[mDoorSeq] > DOOR_OPEN_START) && (sRamDArry[mDoorSeq] < READY_ELEVATOR) && ( !bDoorJumper)){
+			if(sRamDArry[mDoorSeq] == DOOR_OPEN_WAIT){
+				if(OneDoorSenserCloseChk())	bDoorJumper=1;	
+			}
+			else{
+			    if((USE_CHECK == BAGGAGE_USE) || (USE_CHECK == CARLIFT_USE)){			
+	        		if( (!IN_OP_E) && (CarDoorCloseEndCheckForDoorjmp()) ){
+						DoorJumperNm=1;
+						bDoorJumper=1;
+					}
+					if( (!IN_X7) && (HoleDoorCloseEndCheckForDoorjmp()) ){
+						DoorJumperNm=(DoorJumperNm | 2);
+						bDoorJumper=1;
+					}					
+			    }
+
+			    else{
+        			if(!IN_OP_E){
+						if(OneDoorSenserCloseChk())	bDoorJumper=1;
+					}
+				}
+
+			}
+			if(bDoorJumper){		
+				if(DoorJumperNm > 0)	DoorJumperNm=(DoorJumperNm-1);
+			}
+		}
+
+		if(bDoorJumper){		
+		  	sRamDArry[mDoorSeq]=DOOR_REOPEN_CHECK;
+		}
+
+	}
+#endif
+
+
+
 /*
 #ifndef	TEMP_PARK
     if(INVERTER_CHECK != LG){
@@ -6814,12 +6853,14 @@ void __attribute__((section(".usercode")))  DoorOpenCloseSeq(void)
 
 			OutDateCheck();
 
-
+/*
 			if((OneDoorSenserCloseChk()) && !(!IN_FR1 && !IN_FR2) && DoorJumperChkOnOffChk){   // && bDoorOpenEndFind){                                  		
 			  	sRamDArry[mDoorSeq]=DOOR_REOPEN_CHECK;
 				bDoorJumper=1;
 				if(DoorJumperNm > 0)	DoorJumperNm=(DoorJumperNm-1);
 			}
+*/
+
 
 			if(bDoorJumper==0){
 				if((DoorOpenTime > (cF_OPWTTM + cF_REOPTM))){
