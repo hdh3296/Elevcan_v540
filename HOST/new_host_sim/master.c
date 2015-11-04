@@ -7935,7 +7935,7 @@ void __attribute__((section(".usercode")))  InPutRead(void)
 //////////////////////
 
     if(BEF_IN_SU1_IN == IN_SU1_IN){
-        if(Su1Time>10){
+        if(Su1Time>30){
             IN_SU1_PORT=BEF_IN_SU1_IN;
             Su1Time=0;
         }
@@ -7947,7 +7947,7 @@ void __attribute__((section(".usercode")))  InPutRead(void)
 
 
     if(BEF_IN_SD1_IN == IN_SD1_IN){
-        if(Sd1Time>10){
+        if(Sd1Time>30){
             IN_SD1_PORT=BEF_IN_SD1_IN;
             Sd1Time=0;
         }
