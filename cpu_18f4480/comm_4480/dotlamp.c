@@ -245,87 +245,87 @@ unsigned char   Lamp(unsigned char id)
 			BCD4_LAMP=0;
 			break;
 		case	3:
-			BCD1_LAMP=0;
+			BCD1_LAMP=1;
 			BCD2_LAMP=1;
 			BCD3_LAMP=0;
 			BCD4_LAMP=0;
 			break;
 		case	4:
-			BCD1_LAMP=1;
+			BCD1_LAMP=0;
 			BCD2_LAMP=1;
 			BCD3_LAMP=0;
 			BCD4_LAMP=0;
 			break;
 		case	5:
 			BCD1_LAMP=0;
-			BCD2_LAMP=0;
+			BCD2_LAMP=1;
 			BCD3_LAMP=1;
 			BCD4_LAMP=0;
 			break;
 		case	6:
 			BCD1_LAMP=1;
-			BCD2_LAMP=0;
+			BCD2_LAMP=1;
 			BCD3_LAMP=1;
 			BCD4_LAMP=0;
 			break;
 		case	7:
-			BCD1_LAMP=0;
-			BCD2_LAMP=1;
+			BCD1_LAMP=1;
+			BCD2_LAMP=0;
 			BCD3_LAMP=1;
 			BCD4_LAMP=0;
 			break;
 		case	8:
-			BCD1_LAMP=1;
-			BCD2_LAMP=1;
+			BCD1_LAMP=0;
+			BCD2_LAMP=0;
 			BCD3_LAMP=1;
 			BCD4_LAMP=0;
 			break;
 		case	9:
 			BCD1_LAMP=0;
 			BCD2_LAMP=0;
-			BCD3_LAMP=0;
+			BCD3_LAMP=1;
 			BCD4_LAMP=1;
 			break;
 		case	10:
 			BCD1_LAMP=1;
 			BCD2_LAMP=0;
-			BCD3_LAMP=0;
+			BCD3_LAMP=1;
 			BCD4_LAMP=1;
 			break;
 		case	11:
-			BCD1_LAMP=0;
+			BCD1_LAMP=1;
 			BCD2_LAMP=1;
-			BCD3_LAMP=0;
+			BCD3_LAMP=1;
 			BCD4_LAMP=1;
 			break;
 		case	12:
-			BCD1_LAMP=1;
+			BCD1_LAMP=0;
 			BCD2_LAMP=1;
-			BCD3_LAMP=0;
+			BCD3_LAMP=1;
 			BCD4_LAMP=1;
 			break;
 		case	13:
 			BCD1_LAMP=0;
-			BCD2_LAMP=0;
-			BCD3_LAMP=1;
+			BCD2_LAMP=1;
+			BCD3_LAMP=0;
 			BCD4_LAMP=1;
 			break;
 		case	14:
 			BCD1_LAMP=1;
-			BCD2_LAMP=0;
-			BCD3_LAMP=1;
+			BCD2_LAMP=1;
+			BCD3_LAMP=0;
 			BCD4_LAMP=1;
 			break;
 		case	15:
-			BCD1_LAMP=0;
-			BCD2_LAMP=1;
-			BCD3_LAMP=1;
+			BCD1_LAMP=1;
+			BCD2_LAMP=0;
+			BCD3_LAMP=0;
 			BCD4_LAMP=1;
 			break;
 		case	16:
-			BCD1_LAMP=1;
-			BCD2_LAMP=1;
-			BCD3_LAMP=1;
+			BCD1_LAMP=0;
+			BCD2_LAMP=0;
+			BCD3_LAMP=0;
 			BCD4_LAMP=1;
 			break;
 	}	
@@ -334,7 +334,8 @@ unsigned char   Lamp(unsigned char id)
     SEG_E=0;        	
     SEG_F=Fire;        	 
     SEG_G1=OverLoad;       	 
-    SEG_G2=1; // 24V 전원 공급 용.(n24)       
+    SEG_G2=1; // 24V 전원 공급 용.(n24) 
+	/*---> FULL 은 기본적으로  FULL 접점에서 출력 나온다. <---*/
 
 /*
 	DOOR_OPEN_LAMP= !Open;
