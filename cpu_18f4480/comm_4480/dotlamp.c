@@ -237,101 +237,221 @@ unsigned char   Lamp(unsigned char id)
 			BCD2_LAMP=0; // M1
 			BCD3_LAMP=0; // M2
 			BCD4_LAMP=0; // M3
+			BCD5_LAMP=0; // M4
 			break;
 		case	2: // 2층
 			BCD1_LAMP=1;
 			BCD2_LAMP=0;
 			BCD3_LAMP=0;
 			BCD4_LAMP=0;
+			BCD5_LAMP=0;
 			break;
 		case	3:
 			BCD1_LAMP=1;
 			BCD2_LAMP=1;
 			BCD3_LAMP=0;
 			BCD4_LAMP=0;
+			BCD5_LAMP=0;
 			break;
 		case	4:
 			BCD1_LAMP=0;
 			BCD2_LAMP=1;
 			BCD3_LAMP=0;
 			BCD4_LAMP=0;
+			BCD5_LAMP=0;
 			break;
 		case	5:
 			BCD1_LAMP=0;
 			BCD2_LAMP=1;
 			BCD3_LAMP=1;
 			BCD4_LAMP=0;
+			BCD5_LAMP=0;
 			break;
 		case	6:
 			BCD1_LAMP=1;
 			BCD2_LAMP=1;
 			BCD3_LAMP=1;
 			BCD4_LAMP=0;
+			BCD5_LAMP=0;
 			break;
 		case	7:
 			BCD1_LAMP=1;
 			BCD2_LAMP=0;
 			BCD3_LAMP=1;
 			BCD4_LAMP=0;
+			BCD5_LAMP=0;
 			break;
 		case	8:
 			BCD1_LAMP=0;
 			BCD2_LAMP=0;
 			BCD3_LAMP=1;
 			BCD4_LAMP=0;
+			BCD5_LAMP=0;
 			break;
 		case	9:
 			BCD1_LAMP=0;
 			BCD2_LAMP=0;
 			BCD3_LAMP=1;
 			BCD4_LAMP=1;
+			BCD5_LAMP=0;
 			break;
 		case	10:
 			BCD1_LAMP=1;
 			BCD2_LAMP=0;
 			BCD3_LAMP=1;
 			BCD4_LAMP=1;
+			BCD5_LAMP=0;
 			break;
 		case	11:
 			BCD1_LAMP=1;
 			BCD2_LAMP=1;
 			BCD3_LAMP=1;
 			BCD4_LAMP=1;
+			BCD5_LAMP=0;
 			break;
 		case	12:
 			BCD1_LAMP=0;
 			BCD2_LAMP=1;
 			BCD3_LAMP=1;
 			BCD4_LAMP=1;
+			BCD5_LAMP=0;
 			break;
 		case	13:
 			BCD1_LAMP=0;
 			BCD2_LAMP=1;
 			BCD3_LAMP=0;
 			BCD4_LAMP=1;
+			BCD5_LAMP=0;
 			break;
 		case	14:
 			BCD1_LAMP=1;
 			BCD2_LAMP=1;
 			BCD3_LAMP=0;
 			BCD4_LAMP=1;
+			BCD5_LAMP=0;
 			break;
 		case	15:
 			BCD1_LAMP=1;
 			BCD2_LAMP=0;
 			BCD3_LAMP=0;
 			BCD4_LAMP=1;
+			BCD5_LAMP=0;
 			break;
 		case	16:
 			BCD1_LAMP=0;
 			BCD2_LAMP=0;
 			BCD3_LAMP=0;
 			BCD4_LAMP=1;
-			break;
+			BCD5_LAMP=0;
+			break;			
+		case	17:
+			BCD1_LAMP=0;
+			BCD2_LAMP=0;
+			BCD3_LAMP=0;
+			BCD4_LAMP=1;
+			BCD5_LAMP=1;
+			break;	
+		case	18:
+			BCD1_LAMP=1;
+			BCD2_LAMP=0;
+			BCD3_LAMP=0;
+			BCD4_LAMP=1;
+			BCD5_LAMP=1;
+			break;	
+		case	19:
+			BCD1_LAMP=1;
+			BCD2_LAMP=1;
+			BCD3_LAMP=0;
+			BCD4_LAMP=1;
+			BCD5_LAMP=1;
+			break;	
+		case	20:
+			BCD1_LAMP=0;
+			BCD2_LAMP=1;
+			BCD3_LAMP=0;
+			BCD4_LAMP=1;
+			BCD5_LAMP=1;
+			break;	
+		case	21:
+			BCD1_LAMP=0;
+			BCD2_LAMP=1;
+			BCD3_LAMP=1;
+			BCD4_LAMP=1;
+			BCD5_LAMP=1;
+			break;	
+		case	22:
+			BCD1_LAMP=1;
+			BCD2_LAMP=1;
+			BCD3_LAMP=1;
+			BCD4_LAMP=1;
+			BCD5_LAMP=1;
+			break;	
+		case	23:
+			BCD1_LAMP=1;
+			BCD2_LAMP=0;
+			BCD3_LAMP=1;
+			BCD4_LAMP=1;
+			BCD5_LAMP=1;
+			break;	
+		case	24:
+			BCD1_LAMP=0;
+			BCD2_LAMP=0;
+			BCD3_LAMP=1;
+			BCD4_LAMP=1;
+			BCD5_LAMP=1;
+			break;	
+		case	25:
+			BCD1_LAMP=0;
+			BCD2_LAMP=0;
+			BCD3_LAMP=1;
+			BCD4_LAMP=0;
+			BCD5_LAMP=1;
+			break;	
+		case	26:
+			BCD1_LAMP=1;
+			BCD2_LAMP=0;
+			BCD3_LAMP=1;
+			BCD4_LAMP=0;
+			BCD5_LAMP=1;
+			break;	
+		case	27:
+			BCD1_LAMP=1;
+			BCD2_LAMP=1;
+			BCD3_LAMP=0;
+			BCD4_LAMP=1;
+			BCD5_LAMP=1;
+			break;	
+		case	28:
+			BCD1_LAMP=0;
+			BCD2_LAMP=1;
+			BCD3_LAMP=1;
+			BCD4_LAMP=0;
+			BCD5_LAMP=1;
+			break;	
+		case	29:
+			BCD1_LAMP=0;
+			BCD2_LAMP=1;
+			BCD3_LAMP=0;
+			BCD4_LAMP=0;
+			BCD5_LAMP=1;
+			break;	
+		case	30:
+			BCD1_LAMP=1;
+			BCD2_LAMP=0;
+			BCD3_LAMP=0;
+			BCD4_LAMP=0;
+			BCD5_LAMP=1;
+			break;	
+		case	31:
+			BCD1_LAMP=0;
+			BCD2_LAMP=0;
+			BCD3_LAMP=0;
+			BCD4_LAMP=0;
+			BCD5_LAMP=1;
+			break;		
 	}	
 
-	//Segment not dispaly  	
-    SEG_E=0;        	
+	//Segment not dispaly  	    	
     SEG_F=Fire;        	 
     SEG_G1=OverLoad;       	 
     SEG_G2=1; // 24V 전원 공급 용.(n24) 
