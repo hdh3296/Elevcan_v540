@@ -36,10 +36,47 @@ funclist
 *.PO
 *.PR
 *.cce
-*.hex
 *.xml
 *.properties
 cpu_18f4480/voice_4480/voice.X/Makefile
 *.d
 *.mk
 *.bash
+Host_v537_bed1.hex
+Host_v538_07ad.hex
+\[141222\] CAR_V9_0xc4d7.hex
+\[141222\] ES15_V9_0x056a.hex
+\[141222\] HIB_V9_0xc22b.hex
+\[141222\] HPI_V9_0xc233.hex
+\[141222\]_VOICE_v9_0xc826.hex
+\[141212\]_mini_loader_old(pic18f2550)_V2_0x181b.hex
+\[141219\] KJD100_V5.39_0x8598.hex
+\[141219\] mini_loader_V2_0xb06c.hex
+\[141230\] CAR_V0_0x9249.hex
+\[141230\] ES15_V0_0x0b50.hex
+\[141230\] HIB_V0_0xc3ae.hex
+\[141230\] HPI_V0_0xc3b6.hex
+\[141230\]_VOICE_v0_0xc826.hex
+\[141028\] es15_0x1b47(BCD).hex
+\[141029\] es15_v1_0x049f_Final.hex
+HIB_4480_0xa478(로컬1,회사D,램프4개).hex
+HIB_4480_0xa479(로컬1,회사D,투터치_CANCEL,userlamp4개).hex
+HIB_4480_V0_0xa473(로컬0,회사D).hex
+HIB_4480_V0_0xa474(로컬1,회사D).hex
+HIB_4480_V0_0xa477('H') \[2015-12-07\].hex
+HPI_0_aef4.hex
+HPI_1_aef5.hex
+HPI_2_aef6.hex
+HPI_3_aef7.hex
+HPI_4480_0xa481(로컬1,회사D,투터치_CANCEL,userlamp4개).hex
+HPI_4_aef8.hex
+HPI_TOG_3574.hex
+Hib_TOG_3573.hex
+Hib_V0_87a0.hex
+hib_V0_c7ec.hex
+hib_bell_8b7f.hex
+hib_luld_7594.hex
+hib_reopen_18da.hex
+hib_shopping_1508.hex
+hib_v3_c622.hex
+voice.X.production.hex
