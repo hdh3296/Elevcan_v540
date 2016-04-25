@@ -288,27 +288,27 @@
 	    
 	    #define  UP_KEY_LAMP    LATC7  //LATE1
 	    #define  DN_KEY_LAMP    LATC6  //LATE0
-	    #define  UP_LAMP        LATC5  //LATE2
+	    #define  UP_LAMP        LATC5  //LATE2 // ES15 UP 立痢
 	    
-	    #define  HALL_LAMP_UP   LATB0
+	    #define  HALL_LAMP_UP   LATB0 
 	    #define  HALL_LAMP_DN   LATB1
-	    #define  DN_LAMP        LATB4
-	    #define  AUTO_LAMP      LATB5 //User Lamp1 at Auto 
-	    #define  MANUAL_LAMP    LATB6 //User Lamp1 at Inspection
-	    #define  FULL_LAMP      LATB7
+	    #define  DN_LAMP        LATB4 // ES15 DN 立痢 
+	    #define  AUTO_LAMP      LATB5 // ES15 AT 立痢,,,,User Lamp1 at Auto 
+	    #define  MANUAL_LAMP    LATB6 // ES15 MT 立痢,,,,,User Lamp1 at Inspection
+	    #define  FULL_LAMP      LATB7 // ES15 FUL 立痢 
 	    
 	    #define  P0             LATD  // 0000 0000 
 	    #define  P2             LATC
 
 
-	    #define  SEG_A          LATD0 
-	    #define  SEG_B          LATD1 
-	    #define  SEG_C          LATD2 
-	    #define  SEG_D        	LATD3 
-	    #define  SEG_E        	LATD4 
-	    #define  SEG_F       	LATD5 
-	    #define  SEG_G1       	LATD6 
-	    #define  SEG_G2         LATD7
+	    #define  SEG_A          LATD0 // ES15 A 立痢
+	    #define  SEG_B          LATD1 //
+	    #define  SEG_C          LATD2 //
+	    #define  SEG_D        	LATD3 //
+	    #define  SEG_E        	LATD4 //
+	    #define  SEG_F       	LATD5 //
+	    #define  SEG_G1       	LATD6 //
+	    #define  SEG_G2         LATD7 // 
  
 
 	    #define  SEG_adg        LATC0 
@@ -318,11 +318,11 @@
 	    #define  SEG_n12        LATC4 
 		//BCD
 		#if defined(__TYPE_DIRECT)	
-		    #define  BCD1_LAMP      LATD0  //Y0
-		    #define  BCD2_LAMP      LATD1  //Y1
-		    #define  BCD3_LAMP      LATD2  //Y2
-		    #define  BCD4_LAMP      LATD3  //Y3	
-		    #define  BCD5_LAMP      LATD4  //Y3	
+		    #define  BCD1_LAMP      LATD0  //Y0 ES15 A 立痢 
+		    #define  BCD2_LAMP      LATD1  //Y1 ES15 B 立痢
+		    #define  BCD3_LAMP      LATD2  //Y2 ES15 C 立痢 
+		    #define  BCD4_LAMP      LATD3  //Y3	ES15 D 立痢 
+		    #define  BCD5_LAMP      LATD4  //Y3	ES15 E 立痢 
 		#endif
 #endif
 

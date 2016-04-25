@@ -120,7 +120,9 @@ const   unsigned        char    PARKING[]={
 };
 
 
-bit	bErrorCar; 
+bit	bErrorCar;
+bit bErrOut;
+bit bAutoReady;
 
 #ifdef	ONE_DSP
 unsigned char  tmpbf[22];;
@@ -230,274 +232,15 @@ unsigned char   Lamp(unsigned char id)
 
 #if defined(__TYPE_DIRECT)
 
-	/*--> 1(HIGH)값을 주면 출력 접점은 출력을준다. 출력값은 0V이다. <--*/
-	if ((RcvBuf[IdPt+DSP1] == '0') && (RcvBuf[IdPt+DSP2] == 'G'))
-	{
-		BCD1_LAMP=0;
-		BCD2_LAMP=1; 
-		BCD3_LAMP=0;
-		BCD4_LAMP=0;
-		BCD5_LAMP=1;
-	}
-	else if ((RcvBuf[IdPt+DSP1] == '0') && (RcvBuf[IdPt+DSP2] == 'L'))
-	{
-		BCD1_LAMP=1;
-		BCD2_LAMP=0;
-		BCD3_LAMP=0;
-		BCD4_LAMP=0;
-		BCD5_LAMP=1;
-	}
-	else if ((RcvBuf[IdPt+DSP1] == '0') && (RcvBuf[IdPt+DSP2] == 'M'))
-	{
-		BCD1_LAMP=0;
-		BCD2_LAMP=0;
-		BCD3_LAMP=0;
-		BCD4_LAMP=0;
-		BCD5_LAMP=1;
-	}
-	else if ((RcvBuf[IdPt+DSP1] == '0') && (RcvBuf[IdPt+DSP2] == 'B'))
-	{
-		BCD1_LAMP=1;
-		BCD2_LAMP=1;
-		BCD3_LAMP=0;
-		BCD4_LAMP=0;
-		BCD5_LAMP=1;
-	}
-	else
-	{
-		switch(RcvBuf[IdPt])
-		{
-			case	1: // 1층
-				BCD1_LAMP=0; // M0
-				BCD2_LAMP=0; // M1
-				BCD3_LAMP=0; // M2
-				BCD4_LAMP=0; // M3
-				BCD5_LAMP=0; // M4
-				break;
-			case	2: // 2층
-				BCD1_LAMP=1;
-				BCD2_LAMP=0;
-				BCD3_LAMP=0;
-				BCD4_LAMP=0;
-				BCD5_LAMP=0;
-				break;
-			case	3:
-				BCD1_LAMP=1;
-				BCD2_LAMP=1;
-				BCD3_LAMP=0;
-				BCD4_LAMP=0;
-				BCD5_LAMP=0;
-				break;
-			case	4:
-				BCD1_LAMP=0;
-				BCD2_LAMP=1;
-				BCD3_LAMP=0;
-				BCD4_LAMP=0;
-				BCD5_LAMP=0;
-				break;
-			case	5:
-				BCD1_LAMP=0;
-				BCD2_LAMP=1;
-				BCD3_LAMP=1;
-				BCD4_LAMP=0;
-				BCD5_LAMP=0;
-				break;
-			case	6:
-				BCD1_LAMP=1;
-				BCD2_LAMP=1;
-				BCD3_LAMP=1;
-				BCD4_LAMP=0;
-				BCD5_LAMP=0;
-				break;
-			case	7:
-				BCD1_LAMP=1;
-				BCD2_LAMP=0;
-				BCD3_LAMP=1;
-				BCD4_LAMP=0;
-				BCD5_LAMP=0;
-				break;
-			case	8:
-				BCD1_LAMP=0;
-				BCD2_LAMP=0;
-				BCD3_LAMP=1;
-				BCD4_LAMP=0;
-				BCD5_LAMP=0;
-				break;
-			case	9:
-				BCD1_LAMP=0;
-				BCD2_LAMP=0;
-				BCD3_LAMP=1;
-				BCD4_LAMP=1;
-				BCD5_LAMP=0;
-				break;
-			case	10:
-				BCD1_LAMP=1;
-				BCD2_LAMP=0;
-				BCD3_LAMP=1;
-				BCD4_LAMP=1;
-				BCD5_LAMP=0;
-				break;
-			case	11:
-				BCD1_LAMP=1;
-				BCD2_LAMP=1;
-				BCD3_LAMP=1;
-				BCD4_LAMP=1;
-				BCD5_LAMP=0;
-				break;
-			case	12:
-				BCD1_LAMP=0;
-				BCD2_LAMP=1;
-				BCD3_LAMP=1;
-				BCD4_LAMP=1;
-				BCD5_LAMP=0;
-				break;
-			case	13:
-				BCD1_LAMP=0;
-				BCD2_LAMP=1;
-				BCD3_LAMP=0;
-				BCD4_LAMP=1;
-				BCD5_LAMP=0;
-				break;
-			case	14:
-				BCD1_LAMP=1;
-				BCD2_LAMP=1;
-				BCD3_LAMP=0;
-				BCD4_LAMP=1;
-				BCD5_LAMP=0;
-				break;
-			case	15:
-				BCD1_LAMP=1;
-				BCD2_LAMP=0;
-				BCD3_LAMP=0;
-				BCD4_LAMP=1;
-				BCD5_LAMP=0;
-				break;
-			case	16:
-				BCD1_LAMP=0;
-				BCD2_LAMP=0;
-				BCD3_LAMP=0;
-				BCD4_LAMP=1;
-				BCD5_LAMP=0;
-				break;			
-			case	17:
-				BCD1_LAMP=0;
-				BCD2_LAMP=0;
-				BCD3_LAMP=0;
-				BCD4_LAMP=1;
-				BCD5_LAMP=1;
-				break;	
-			case	18:
-				BCD1_LAMP=1;
-				BCD2_LAMP=0;
-				BCD3_LAMP=0;
-				BCD4_LAMP=1;
-				BCD5_LAMP=1;
-				break;	
-			case	19:
-				BCD1_LAMP=1;
-				BCD2_LAMP=1;
-				BCD3_LAMP=0;
-				BCD4_LAMP=1;
-				BCD5_LAMP=1;
-				break;	
-			case	20:
-				BCD1_LAMP=0;
-				BCD2_LAMP=1;
-				BCD3_LAMP=0;
-				BCD4_LAMP=1;
-				BCD5_LAMP=1;
-				break;	
-			case	21:
-				BCD1_LAMP=0;
-				BCD2_LAMP=1;
-				BCD3_LAMP=1;
-				BCD4_LAMP=1;
-				BCD5_LAMP=1;
-				break;	
-			case	22:
-				BCD1_LAMP=1;
-				BCD2_LAMP=1;
-				BCD3_LAMP=1;
-				BCD4_LAMP=1;
-				BCD5_LAMP=1;
-				break;	
-			case	23:
-				BCD1_LAMP=1;
-				BCD2_LAMP=0;
-				BCD3_LAMP=1;
-				BCD4_LAMP=1;
-				BCD5_LAMP=1;
-				break;	
-			case	24:
-				BCD1_LAMP=0;
-				BCD2_LAMP=0;
-				BCD3_LAMP=1;
-				BCD4_LAMP=1;
-				BCD5_LAMP=1;
-				break;	
-			case	25:
-				BCD1_LAMP=0;
-				BCD2_LAMP=0;
-				BCD3_LAMP=1;
-				BCD4_LAMP=0;
-				BCD5_LAMP=1;
-				break;	
-			case	26:
-				BCD1_LAMP=1;
-				BCD2_LAMP=0;
-				BCD3_LAMP=1;
-				BCD4_LAMP=0;
-				BCD5_LAMP=1;
-				break;	
-			case	27:
-				BCD1_LAMP=1;
-				BCD2_LAMP=1;
-				BCD3_LAMP=0;
-				BCD4_LAMP=1;
-				BCD5_LAMP=1;
-				break;	
-			case	28:
-				BCD1_LAMP=0;
-				BCD2_LAMP=1;
-				BCD3_LAMP=1;
-				BCD4_LAMP=0;
-				BCD5_LAMP=1;
-				break;	
-			case	29:
-				BCD1_LAMP=0;
-				BCD2_LAMP=1;
-				BCD3_LAMP=0;
-				BCD4_LAMP=0;
-				BCD5_LAMP=1;
-				break;	
-			case	30:
-				BCD1_LAMP=1;
-				BCD2_LAMP=0;
-				BCD3_LAMP=0;
-				BCD4_LAMP=0;
-				BCD5_LAMP=1;
-				break;	
-			case	31:
-				BCD1_LAMP=0;
-				BCD2_LAMP=0;
-				BCD3_LAMP=0;
-				BCD4_LAMP=0;
-				BCD5_LAMP=1;
-				break;	
-			case	32: // 32층
-				BCD1_LAMP=1;
-				BCD2_LAMP=1;
-				BCD3_LAMP=0;
-				BCD4_LAMP=0;
-				BCD5_LAMP=1;
-				break;				
-		}	
-	}
 
-	//Segment not dispaly  	    	
-    SEG_F=Fire;        	 
-    SEG_G1=OverLoad;       	 
-    SEG_G2=1; // 24V 전원 공급 용.(n24) 
+	BCD1_LAMP=UpMove; // A
+	BCD2_LAMP=DnMove; // B
+	BCD3_LAMP=Auto; // C
+	BCD4_LAMP=!Auto; // D
+	BCD5_LAMP=Emg; // E  	    	
+    SEG_F=ShiftOn; // 주행중      	 
+    SEG_G1=bAutoReady; // 오토레디       	 
+    SEG_G2=bErrOut; // err 출력 
 	/*---> FULL 은 기본적으로  FULL 접점에서 출력 나온다. <---*/
 
 
@@ -702,6 +445,12 @@ unsigned char   Lamp(unsigned char id)
 	bErrorCar=0;
    	if(RcvBuf[IdPt + SL_mSysStatus] < 25)       bErrorCar=1;
 	if( !Auto)									bErrorCar=1;
+
+	bErrOut = 0;
+	if((RcvBuf[IdPt + SL_OUT_FAN] & (0x01 << 5)) != 0x0)		bErrOut = 1;
+
+	bAutoReady = 0;
+	if(RcvBuf[IdPt + SL_mSysStatus] == 65)       bAutoReady=1;
 
 
 #ifdef __TYPE_CAR      

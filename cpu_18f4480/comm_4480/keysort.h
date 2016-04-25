@@ -133,6 +133,10 @@ extern	void	MyConfigSet(void);
 #define     IsBufferPt(pt)                     		  ((pt * HOST_DATA_RECOD) + RCV_DATA)
 
 
+#define ELE_bIN_ERR(pt)  	(((RcvBuf[pt + SL_OUT_FAN] & (0x01 << 5)) == 0x0)?		0:1)
+
+
+
 //(RcvBuf[pt + S4_STATE] & S4_CAR_MOST_SERVICE)  ? (1) : (0)
 //#define     BASE_OFFSET_CAR                           5
 
