@@ -232,15 +232,30 @@ unsigned char   Lamp(unsigned char id)
 
 #if defined(__TYPE_DIRECT)
 
+	switch(RcvBuf[IdPt])
+	{
+		case	1: // 1층 
+			BCD3_LAMP=1;
+			BCD4_LAMP=0;
+			break;	
+		case	2: // 2층 
+			BCD3_LAMP=0;
+			BCD4_LAMP=1;
+			break;		
+		default:
+			BCD3_LAMP=0;
+			BCD4_LAMP=0;			
+	}	
 
+
+
+	// 값이 0이면 출력 없음입니다. 
 	BCD1_LAMP=UpMove; // A
 	BCD2_LAMP=DnMove; // B
-	BCD3_LAMP=Auto; // C
-	BCD4_LAMP=!Auto; // D
-	BCD5_LAMP=Emg; // E  	    	
-    SEG_F=ShiftOn; // 주행중      	 
-    SEG_G1=bAutoReady; // 오토레디       	 
-    SEG_G2=bErrOut; // err 출력 
+	BCD5_LAMP=0; // E  	    	
+    SEG_F=0; // 주행중      	 
+    SEG_G1=0; // 오토레디       	 
+    SEG_G2=0; // err 출력 
 	/*---> FULL 은 기본적으로  FULL 접점에서 출력 나온다. <---*/
 
 
