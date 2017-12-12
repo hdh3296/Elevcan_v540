@@ -9173,6 +9173,8 @@ unsigned int	__attribute__((section(".usercode"))) UpDnSim(void)
 
 
 
+unsigned int hdhTimer = 0;
+unsigned int TestLoop = 0;
 
 
 void  __attribute__((section(".usercode")))   IO_Check(void)
@@ -9415,7 +9417,16 @@ void  __attribute__((section(".usercode")))   IO_Check(void)
 //    InvErrChk();
 //    DoorOpenSetChk();
 
-
+	if (TestLoop)
+	{
+		OUT_P4(1);
+		OUT_P3(1);
+		OUT_P2(1);
+		OUT_P1(1);
+		OUT_D_W(1); 
+		OUT_U_W(1);
+	}
+	
     OutData();
 
 	SystemErrSave();
@@ -10198,6 +10209,13 @@ void _ISR _T1Interrupt(void)
             else{
         		MotorMoveTime=0;    
             }
+
+			hdhTimer++;
+			if (hdhTimer >= 10)
+			{
+				hdhTimer = 0;
+				TestLoop = ~TestLoop;
+			}		
 #endif
 
         }      

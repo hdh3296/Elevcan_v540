@@ -10,7 +10,7 @@
 extern void __attribute__((section(".usercode"))) HextoASCIIByte(void);
 
 
-//#define  TEST_SIMULATION  	1
+#define  TEST_SIMULATION  	1
 //#define  KTL  				1
 
 #define DISABLE_INTERRUPTS 	asm("push SR \n bset SR,#7 \n bset SR,#6 \n	bclr	SR,#5")
