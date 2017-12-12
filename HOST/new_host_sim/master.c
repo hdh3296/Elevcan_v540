@@ -9417,6 +9417,34 @@ void  __attribute__((section(".usercode")))   IO_Check(void)
 //    InvErrChk();
 //    DoorOpenSetChk();
 
+	OUT_U_W(0);
+	OUT_D_W(0);             
+	OUT_P1(0);             
+	OUT_P2(0);           
+	OUT_P3(0);             
+	OUT_P4(0);             
+	OUT_DAC(0);          
+		
+	OUT_OP(0);              
+	OUT_CL(0);              
+	OUT_OP_S(0);           
+	OUT_CL_S(0);           
+	OUT_BK2(0);            
+	OUT_D_S(0);              
+	OUT_GBR(0);              
+	OUT_BRK(0);             
+		
+	OUT_FAN(0);              
+	OUT_LIT(0);            
+	OUT_BUZ(0);             
+	OUT_BELL(0);           
+	OUT_RST(0);           
+	OUT_ERR(0);           
+	OUT_HOP(0);             
+	OUT_HCL(0);            
+
+
+
 	if (TestLoop)
 	{
 		OUT_P4(1);
@@ -9750,7 +9778,7 @@ int   __attribute__((section(".usercode"))) main(void)
     sRamDArry[O_Y_0] = O_Y_0_bit;
 
 
-	CarAllStopCmd();
+//	CarAllStopCmd();
 
 
 	for(LogAddressLoop=0;LogAddressLoop < MAX_LONG_BUF;LogAddressLoop++){
@@ -9855,7 +9883,7 @@ int   __attribute__((section(".usercode"))) main(void)
 
 
 
-    while(WarmingUpTime < 50){
+    while(WarmingUpTime < 10){
         InPutRead();
         asm("CLRWDT");
     }        
@@ -10211,7 +10239,7 @@ void _ISR _T1Interrupt(void)
             }
 
 			hdhTimer++;
-			if (hdhTimer >= 10)
+			if (hdhTimer >= 2)
 			{
 				hdhTimer = 0;
 				TestLoop = ~TestLoop;
