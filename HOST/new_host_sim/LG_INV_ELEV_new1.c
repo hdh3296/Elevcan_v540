@@ -40,15 +40,16 @@ void __attribute__((section(".usercode")))   DspFloorSet(void)
 
     if(bDspSeq || !(bCarErr || bCarStopNoRun || bCarStop) ){  
 
-
-		if(myTestTimer_florPlus > 50)
+		if(!bAuto)
 		{
-			sRamDArry[mcurfloor]++;
-			if(sRamDArry[mcurfloor] >= 32) sRamDArry[mcurfloor] = 0; 
-			
-			myTestTimer_florPlus = 0;
+			if(myTestTimer_florPlus >= 40)
+			{
+				sRamDArry[mcurfloor]++;
+				if(sRamDArry[mcurfloor] >= 32) sRamDArry[mcurfloor] = 0; 
+				
+				myTestTimer_florPlus = 0;
+			}
 		}
-
 		
 
 		i=(UserDataType)(sRamDArry[mcurfloor] * 2);

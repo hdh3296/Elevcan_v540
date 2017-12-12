@@ -4455,7 +4455,7 @@ void __attribute__((section(".usercode")))  InputCheck(void)
 void __attribute__((section(".usercode")))  AutoManualCheck(void)
 {
 
-    if(IN_AUTO || (WarmingUpTime<100) || (sRamDArry[LD_INSP] == 0x55) || ManWorkingChk){
+    if(!IN_AUTO || (WarmingUpTime<100) || (sRamDArry[LD_INSP] == 0x55) || ManWorkingChk){
         if(S1_AUTO1){
             if(bMoveCar)    bCarErr=1;
             else            bCarStop=1;
@@ -10240,7 +10240,7 @@ void _ISR _T1Interrupt(void)
             }
 
 			hdhTimer++;
-			if (hdhTimer >= 30)
+			if (hdhTimer >= 2)
 			{
 				hdhTimer = 0;
 				TestLoop = ~TestLoop;
