@@ -32,13 +32,26 @@ const   unsigned        int    seg1[]={0x0,0x06,0x0b,0x07};
 const   unsigned        int    seg0[]={0x3f,0x06,0xdb,0xcf,0xe6,0xed,0xfd,0x27,0xff,0xef,0x5c};
  
 
+unsigned int myTestTimer_florPlus = 0;
 
 void __attribute__((section(".usercode")))   DspFloorSet(void)
 {
     LocalType i,j;  
 
-    if(bDspSeq || !(bCarErr || bCarStopNoRun || bCarStop) ){    
-        i=(UserDataType)(sRamDArry[mcurfloor] * 2);
+    if(bDspSeq || !(bCarErr || bCarStopNoRun || bCarStop) ){  
+
+
+		if(myTestTimer_florPlus > 50)
+		{
+			sRamDArry[mcurfloor]++;
+			if(sRamDArry[mcurfloor] >= 32) sRamDArry[mcurfloor] = 0; 
+			
+			myTestTimer_florPlus = 0;
+		}
+
+		
+
+		i=(UserDataType)(sRamDArry[mcurfloor] * 2);
         
     	sRamDArry[S0_FLOOR]  = sRamDArry[mcurfloor]+1;
             

@@ -9175,6 +9175,7 @@ unsigned int	__attribute__((section(".usercode"))) UpDnSim(void)
 
 unsigned int hdhTimer = 0;
 unsigned int TestLoop = 0;
+extern unsigned int myTestTimer_florPlus;
 
 
 void  __attribute__((section(".usercode")))   IO_Check(void)
@@ -10239,11 +10240,14 @@ void _ISR _T1Interrupt(void)
             }
 
 			hdhTimer++;
-			if (hdhTimer >= 2)
+			if (hdhTimer >= 30)
 			{
 				hdhTimer = 0;
 				TestLoop = ~TestLoop;
-			}		
+			}
+
+			myTestTimer_florPlus++;
+
 #endif
 
         }      
