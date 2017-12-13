@@ -9445,15 +9445,83 @@ void  __attribute__((section(".usercode")))   IO_Check(void)
 	OUT_HCL(0);            
 
 
-
-	if (TestLoop)
+	if (IN_EMG)
 	{
-		OUT_P4(1);
-		OUT_P3(1);
-		OUT_P2(1);
-		OUT_P1(1);
-		OUT_D_W(1); 
-		OUT_U_W(1);
+		switch(TestLoop)
+		{
+			case 0:
+				OUT_P4(1);
+				break;
+			case 1:
+				OUT_P3(1);
+				break;
+			case 2:
+				OUT_P2(1);	
+				break;
+			case 3:
+				OUT_P1(1);
+				break;
+			case 4:
+				OUT_D_W(1); 
+				break;
+			case 5:
+				OUT_U_W(1);
+				break;
+			case 6:
+				OUT_GBR(1);
+				break;
+			case 7:
+				OUT_D_S(1);
+				break;
+			case 8:
+				OUT_CL_S(1);	
+				break;
+			case 9:
+				OUT_OP_S(1);
+				break;	
+			case 10:
+				OUT_CL(1);	
+				break;	
+			case 11:
+				OUT_OP(1);
+				break;	
+			case 12:
+				OUT_HCL(1);  
+				break;	
+			case 13:
+				OUT_HOP(1); 
+				break;	
+			case 14:
+				OUT_ERR(1); 
+				break;	
+			case 15:
+				OUT_RST(1); 
+				break;	
+			case 16:
+				OUT_BELL(1);
+				break;	
+			case 17:
+				OUT_BUZ(1);
+				break;	
+			case 18:
+				OUT_LIT(1);
+				break;	
+			case 19:
+				OUT_FAN(1); 
+				break;	
+			case 20:
+				OUT_BRK(1); 
+				break;	
+			case 21:
+				OUT_BK2(1); 
+				break;	
+			case 22:
+				OUT_DAC(1); 
+				break;	
+			default:
+				TestLoop = 0;
+				break;	
+		}
 	}
 	
     OutData();
@@ -10243,7 +10311,7 @@ void _ISR _T1Interrupt(void)
 			if (hdhTimer >= 2)
 			{
 				hdhTimer = 0;
-				TestLoop = ~TestLoop;
+				TestLoop++;
 			}
 
 			myTestTimer_florPlus++;
